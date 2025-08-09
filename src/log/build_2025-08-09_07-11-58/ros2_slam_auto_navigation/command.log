@@ -1,0 +1,4 @@
+Invoking command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation -- -j16 -l16
+Invoked command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation -- -j16 -l16
+Invoking command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation
+Invoked command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation
