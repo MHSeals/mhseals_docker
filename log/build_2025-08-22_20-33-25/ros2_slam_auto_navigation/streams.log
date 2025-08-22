@@ -1,0 +1,65 @@
+[0.030s] Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation
+[0.213s] -- The C compiler identification is GNU 11.4.0
+[0.376s] -- The CXX compiler identification is GNU 11.4.0
+[0.403s] -- Detecting C compiler ABI info
+[0.602s] -- Detecting C compiler ABI info - done
+[0.630s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.632s] -- Detecting C compile features
+[0.634s] -- Detecting C compile features - done
+[0.641s] -- Detecting CXX compiler ABI info
+[0.820s] -- Detecting CXX compiler ABI info - done
+[0.848s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.849s] -- Detecting CXX compile features
+[0.850s] -- Detecting CXX compile features - done
+[0.858s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.192s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[1.487s] -- Found ament_lint_auto: 0.12.14 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.760s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.770s] -- Added test 'flake8' to check Python code syntax and style conventions
+[1.772s] -- Added test 'lint_cmake' to check CMake code style
+[1.774s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[1.779s] -- Added test 'xmllint' to check XML markup files
+[1.784s] -- Configuring done
+[1.788s] -- Generating done
+[1.791s] -- Build files have been written to: /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation
+[1.800s] Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation
+[1.806s] Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation -- -j12 -l12
+[1.884s] Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation -- -j12 -l12
+[1.904s] Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation
+[1.916s] -- Install configuration: ""
+[1.916s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config
+[1.916s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/gazebo_params.yaml
+[1.917s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/mapper_params_online_async.yaml
+[1.918s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/twist_mux.yaml
+[1.918s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/config/my_controller.yaml
+[1.918s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description
+[1.918s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/ros2_control.xacro
+[1.919s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/lidar.xacro
+[1.919s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/robot_base.xacro
+[1.920s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/camera.xacro
+[1.920s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/inertial_macros.xacro
+[1.921s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/depth_camera.xacro
+[1.921s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/robot.urdf.xacro
+[1.921s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/description/gazebo_control.xacro
+[1.921s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch
+[1.922s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/rsp.launch.py
+[1.922s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/slam_navigation.launch.py
+[1.923s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/launch/launch_sim.launch.py
+[1.923s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/worlds
+[1.923s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/worlds/simple.world
+[1.924s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/package_run_dependencies/ros2_slam_auto_navigation
+[1.925s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/parent_prefix_path/ros2_slam_auto_navigation
+[1.925s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/ament_prefix_path.sh
+[1.925s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/ament_prefix_path.dsv
+[1.926s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/path.sh
+[1.929s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/environment/path.dsv
+[1.929s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.bash
+[1.930s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.sh
+[1.930s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.zsh
+[1.931s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/local_setup.dsv
+[1.932s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/package.dsv
+[1.932s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ament_index/resource_index/packages/ros2_slam_auto_navigation
+[1.933s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/cmake/ros2_slam_auto_navigationConfig.cmake
+[1.933s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/cmake/ros2_slam_auto_navigationConfig-version.cmake
+[1.934s] -- Installing: /home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation/share/ros2_slam_auto_navigation/package.xml
+[1.934s] Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation
