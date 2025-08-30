@@ -1,6 +1,0 @@
-Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation
-Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/install/ros2_slam_auto_navigation
-Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation -- -j12 -l12
-Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation -- -j12 -l12
-Invoking command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation
-Invoked command in '/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation

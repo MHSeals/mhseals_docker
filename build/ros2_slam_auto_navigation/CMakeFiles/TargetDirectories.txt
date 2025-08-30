@@ -1,9 +1,0 @@
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/uninstall.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/ros2_slam_auto_navigation_uninstall.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/test.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/edit_cache.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/rebuild_cache.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/list_install_components.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/install.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/install/local.dir
-/home/lunarz/roboboat_ws/build/ros2_slam_auto_navigation/CMakeFiles/install/strip.dir
