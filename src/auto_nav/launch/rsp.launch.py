@@ -17,7 +17,7 @@ def generate_launch_description():
 
     # Process the URDF file
     pkg_path = os.path.join(
-        get_package_share_directory('ros2_slam_auto_navigation'))
+        get_package_share_directory('auto_nav'))
     xacro_file = os.path.join(pkg_path, 'description', 'robot.urdf.xacro')
     robot_description_config = xacro.process_file(xacro_file)
 

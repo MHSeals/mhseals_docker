@@ -12,7 +12,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Define the package name for easier reference
-    package_name = 'ros2_slam_auto_navigation'
+    package_name = 'auto_nav'
 
     # Declare the 'world_file' launch argument
     # This allows the user to specify the path to the Gazebo world file to be
