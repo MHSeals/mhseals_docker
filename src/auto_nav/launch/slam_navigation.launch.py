@@ -7,12 +7,13 @@ from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch_ros.substitutions import FindPackageShare
 
+
 def generate_launch_description():
     # Declare arguments
     slam_params_file_arg = DeclareLaunchArgument(
         'slam_params_file',
         default_value=PathJoinSubstitution([
-            FindPackageShare('ros2-slam-auto-navigation'),
+            FindPackageShare('auto_nav'),
             'config',
             'mapper_params_online_async.yaml'
         ]),

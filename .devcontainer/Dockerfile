@@ -15,6 +15,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
+
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip \
                        ros-humble-xacro \
@@ -26,7 +27,20 @@ RUN apt-get install -y python3-pip \
                        ros-humble-navigation2 \
                        ros-humble-nav2-bringup \
                        ros-humble-twist-mux \
-                       ros-humble-rviz2
+                       ros-humble-rviz2 \
+                       python3-venv \
+                       python3-pip \
+                       build-essential \
+                       && apt-get clean \
+                       && rm -rf /var/lib/apt/lists/*
+
+# Virtualize and install Python packages, placed in a lower layer to minimize rebuilds
+WORKDIR /home/${USERNAME}/roboboat_ws
+COPY requirements.txt .
+RUN python3 -m venv /workspace/venv \
+    && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL /bin/bash
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
