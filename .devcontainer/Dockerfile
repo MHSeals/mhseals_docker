@@ -9,7 +9,6 @@ RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    #
     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
     && apt-get update \
     && apt-get install -y sudo \
@@ -37,7 +36,7 @@ RUN apt-get update && apt-get upgrade -y \
 # Virtualize and install Python packages, placed in a lower layer to minimize rebuilds
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
-RUN python3 -m venv /workspace/venv \
+RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
