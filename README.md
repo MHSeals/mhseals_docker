@@ -1,28 +1,30 @@
-# ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
-
 > [!NOTE]
 > This README was sourced directly from [a separate guide on GitHub](https://github.com/taherfattahi/ros2-slam-auto-navigation). Needed changes will be made as we continue to build upon the project as a base. If you plan to write more comprehensive documentation (or would like to see more detailed guides), please view the official [MHSeals Documentation](docs.mhsroboboat.com).
 
+## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
+
 Use SLAM Toolbox to generate a map of the environment, then utilize the Nav2 stack for autonomous navigation within that mapped space. Rviz provides visualization of the robot, its surroundings, and ongoing navigation tasks.
 
-## Demo Video
+### Demo Video
 [![IMAGE](images/image_thumbnail.png)](https://youtu.be/-g2nmHqZfgc?si=NTKtegcQCZkt2e99)
 
 
-## Overview
+### Overview
 
-This project provides:
+This package provides:
 - **Gazebo** simulation environment.
 - **ROS2** Control integration to handle the robot’s joints and controllers.
 - **SLAM Toolbox** for online (asynchronous) map building as the robot explores.
 - **Nav2** stack to plan paths and autonomously navigate in the mapped environment.
 - **Rviz2** visualization for monitoring robot state, the map, and navigation plans.
 
-## Transform frame
+### Transform frame
 ![tf2_frames](images/tf2_frames.png)
 
 
-## Dependencies and Setup
+### Dependencies and Setup
+
+If you intend to run the `auto_nav` package on your local dev environment, you need to install the following. Otherwise, skip this section if you are using the Docker container.
 
 -  Install ROS 2 Humble - [Read here](https://docs.ros.org/en/humble/Installation.html)
 -  Create Workspace - [Read here](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html)
@@ -47,7 +49,7 @@ sudo apt install ros-<distro-name>-slam-toolbox
 sudo apt install ros-<distro-name>-navigation2 sudo apt install ros-<distro-name>-nav2-bringup sudo apt install ros-<distro-name>-twist-mux
 ```
 
-## Building the Package
+### Building the Package
 After cloning this repository into your workspace’s ```src``` directory:
 ```sh
 cd <your_ros2_ws>
@@ -55,19 +57,19 @@ colcon build
 source install/setup.bash
 ```
 
-## Usage
+### Usage
 
 1. **Launch the Simulation**
 Run the Gazebo simulation environment and spawn the robot:
 
 ```sh
-ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/ros2-slam-auto-navigation/worlds/simple.world
+ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/auto_nav/worlds/simple.world
 ```
 
 2. **Launch SLAM and Navigation**
 In a new terminal (with the workspace sourced), launch the SLAM Toolbox and Nav2 bringup with Rviz:
 ```sh
-ros2 launch ros2_slam_auto_navigation slam_navigation.launch.py slam_params_file:=<Path-to-workspace>/src/ros2-slam-auto-navigation/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch ros2_slam_auto_navigation slam_navigation.launch.py slam_params_file:=<Path-to-workspace>/src/auto_nav/config/mapper_params_online_async.yaml use_sim_time:=true
 ```
 
 3. **Use Rviz2 for Visualization:** Rviz2 should start automatically from the second launch file. In Rviz2:
@@ -76,15 +78,15 @@ ros2 launch ros2_slam_auto_navigation slam_navigation.launch.py slam_params_file
 
 4. **Autonomous Navigation:** Once you have a map (even partial), you can send navigation goals to the robot via Rviz. Nav2 will compute a path and command the robot to reach the desired destination.
 
-## Launch Simulator-SLAM-Navigation-RViz commands individually
+### Launch Simulator-SLAM-Navigation-RViz commands individually
 
 1. Launching the Simulation Environment
 ```sh
-ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/ros2-slam-auto-navigation/worlds/simple.world
+ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/auto_nav/worlds/simple.world
 ```
 2. Starting the SLAM Toolbox (Online, Asynchronous Mode)
 ```sh
-ros2 launch slam_toolbox online_async_launch.py slam_params_file:=<Path-to-workspace>/src/ros2-slam-auto-navigation/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch slam_toolbox online_async_launch.py slam_params_file:=<Path-to-workspace>/src/auto_nav/config/mapper_params_online_async.yaml use_sim_time:=true
 ```
 3. Initializing the Navigation Stack
 ```sh
@@ -95,7 +97,7 @@ ros2 launch nav2_bringup navigation_launch.py use_sim_time:=True
 ros2 run rviz2 rviz2 use_sim_time:=True -d /opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz
 ```
 
-## Troubleshooting
+### Troubleshooting
 - **Simulation Issues:**
   Ensure that Gazebo, ROS2 Control, and joint publisher packages are correctly installed.
 
@@ -105,10 +107,10 @@ Check the URDF/Xacro files and the rsp.launch.py to ensure the robot description
 - **Navigation Errors:**
 Confirm that SLAM Toolbox is running and providing a map. Ensure that Nav2 parameters match your robot’s configuration (e.g., footprint, sensor sources).
 
-## Contributing
+### Contributing
 Contributions are welcome. If you find a bug or have a feature request, please open an issue or submit a pull request.
 
-## Resources
+### Resources
 
 - Robot Operating System [(ROS 2 Humble)](https://docs.ros.org/en/humble/index.html)
 - ROS 2 [tf2](https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Introduction-To-Tf2.html)
