@@ -1,6 +1,9 @@
 # ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
-Use the SLAM Toolbox to generate a map of the environment, then utilize the Nav2 stack for autonomous navigation within that mapped space. Rviz provides visualization of the robot, its surroundings, and ongoing navigation tasks.
+> [!NOTE]
+> This README was sourced directly from [a separate guide on GitHub](https://github.com/taherfattahi/ros2-slam-auto-navigation). Needed changes will be made as we continue to build upon the project as a base. If you plan to write more comprehensive documentation (or would like to see more detailed guides), please view the official [MHSeals Documentation](docs.mhsroboboat.com).
+
+Use SLAM Toolbox to generate a map of the environment, then utilize the Nav2 stack for autonomous navigation within that mapped space. Rviz provides visualization of the robot, its surroundings, and ongoing navigation tasks.
 
 ## Demo Video
 [![IMAGE](images/image_thumbnail.png)](https://youtu.be/-g2nmHqZfgc?si=NTKtegcQCZkt2e99)
