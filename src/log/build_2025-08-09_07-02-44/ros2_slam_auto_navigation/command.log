@@ -1,2 +1,0 @@
-Invoking command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation': /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/src/install/ros2_slam_auto_navigation
-Invoked command in '/home/lunarz/roboboat_ws/src/build/ros2_slam_auto_navigation' returned '1': /usr/bin/cmake /home/lunarz/roboboat_ws/src/ros2-slam-auto-navigation -DCMAKE_INSTALL_PREFIX=/home/lunarz/roboboat_ws/src/install/ros2_slam_auto_navigation
