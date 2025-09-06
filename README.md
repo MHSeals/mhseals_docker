@@ -63,13 +63,13 @@ source install/setup.bash
 Run the Gazebo simulation environment and spawn the robot:
 
 ```sh
-ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/auto_nav/worlds/simple.world
+ros2 launch auto_nav launch_sim.launch.py
 ```
 
 2. **Launch SLAM and Navigation**
 In a new terminal (with the workspace sourced), launch the SLAM Toolbox and Nav2 bringup with Rviz:
 ```sh
-ros2 launch ros2_slam_auto_navigation slam_navigation.launch.py slam_params_file:=<Path-to-workspace>/src/auto_nav/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch auto_nav slam_navigation.launch.py use_sim_time:=true
 ```
 
 3. **Use Rviz2 for Visualization:** Rviz2 should start automatically from the second launch file. In Rviz2:
@@ -82,11 +82,11 @@ ros2 launch ros2_slam_auto_navigation slam_navigation.launch.py slam_params_file
 
 1. Launching the Simulation Environment
 ```sh
-ros2 launch ros2_slam_auto_navigation launch_sim.launch.py world_file:=<Path-to-workspace>/src/auto_nav/worlds/simple.world
+ros2 launch auto_nav launch_sim.launch.py
 ```
 2. Starting the SLAM Toolbox (Online, Asynchronous Mode)
 ```sh
-ros2 launch slam_toolbox online_async_launch.py slam_params_file:=<Path-to-workspace>/src/auto_nav/config/mapper_params_online_async.yaml use_sim_time:=true
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true
 ```
 3. Initializing the Navigation Stack
 ```sh
