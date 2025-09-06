@@ -1,1 +1,9 @@
 autopep8
+catkin_pkg
+empy
+lark-parser
+rospkg
+ament-package
+setuptools
+colcon-common-extensions
+numpy
