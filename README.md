@@ -1,6 +1,32 @@
 > [!NOTE]
 > This README was sourced directly from [a separate guide on GitHub](https://github.com/taherfattahi/ros2-slam-auto-navigation). Needed changes will be made as we continue to build upon the project as a base. If you plan to write more comprehensive documentation (or would like to see more detailed guides), please view the official [MHSeals Documentation](docs.mhsroboboat.com).
 
+## Docker Installation
+
+### Linux
+
+For your convenience, a Docker installation script is available by running the following commands in the root of this repository:
+
+```bash
+chmod +x install_docker.sh
+./install_docker.sh
+```
+
+To quickly install all recommended VSCode extensions, use the provided script. 
+
+```bash
+chmod +x install_extensions.sh
+./install_extensions.sh
+```
+
+For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
+
+### Windows or MacOS
+
+This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. To install Docker, visit the latest [Docker Desktop release notes](https://docs.docker.com/desktop/release-notes/), then download and use the appropriate installer.
+
+When you open this folder in VSCode, you should be prompted to install recommended extensions. Select the option to install them, so you can use the Dev Containers extension to speed up your workflow.
+
 ## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
 Use SLAM Toolbox to generate a map of the environment, then utilize the Nav2 stack for autonomous navigation within that mapped space. Rviz provides visualization of the robot, its surroundings, and ongoing navigation tasks.
@@ -106,9 +132,6 @@ Check the URDF/Xacro files and the rsp.launch.py to ensure the robot description
 
 - **Navigation Errors:**
 Confirm that SLAM Toolbox is running and providing a map. Ensure that Nav2 parameters match your robot’s configuration (e.g., footprint, sensor sources).
-
-### Contributing
-Contributions are welcome. If you find a bug or have a feature request, please open an issue or submit a pull request.
 
 ### Resources
 
