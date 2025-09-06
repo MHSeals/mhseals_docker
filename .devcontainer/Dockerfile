@@ -38,6 +38,7 @@ RUN apt-get install -y python3-pip \
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 RUN python3 -m venv /workspace/venv \
+    && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 ENV PATH=/workspace/venv/bin:$PATH
