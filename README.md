@@ -25,8 +25,37 @@ For manual installation instructions, visit the [Docker Engine installation guid
 
 > [!IMPORTANT]
 > If you are on Windows, please use the `wsl` branch of this repo for the appropriate instructions and configuration to run this container on WSL.
+> This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
 
-This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
+Install the following programs:
+- [VcXsrv (X server for display)](https://sourceforge.net/projects/vcxsrv/)
+- [Git](https://git-scm.com/downloads)
+- [VSCode](https://code.visualstudio.com/)
+- [Docker Desktop](https://docs.docker.com/desktop/release-notes/) 
+
+**Start the Docker Daemon each time you want to work on the project by opening the Docker Desktop application.** The first time you install it, you will be prompted to restart your system.
+
+Once you have installed all the programs, open your terminal and run the following. The current setup is fragile, so please read the notes next to each command to ensure everything is configured correctly. Improvements are actively being made.
+
+```bash
+cd $home # Ensure the repo is in the user directory due to the way the Dockerfile is configured
+git clone -b wsl https://github.com/MHSeals/mhseals_docker.git
+mv mhseals_docker roboboat_ws # The name is hardcoded for now, to be fixed
+cd roboboat_ws
+code . # Open folder in VSCode
+```
+
+Once the folder is open in VSCode, install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. There should be a prompt in the bottom-right corner asking if you would like to install the recommended extensions.
+
+Using `Ctrl+Shift+P`, open the command palette, and select the `Dev Containers: Open in Container` option.
+
+> [!NOTE]
+> In order to run ROS GUI applications such as rviz2 and Gazebo, you will need to have GPU drivers with support for modern versions of OpenGL (dedicated NVIDIA or AMD cards are preferable, but some integrated graphics will work; **VMs will NOT work (for now with GUI applications)**).
+
+Finally, to allow GUI applications to open on your computer, run the XLaunch Wizard with the following options:
+- Multiple windows
+- Start no client
+- Enable `Disable access control`
 
 ## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
