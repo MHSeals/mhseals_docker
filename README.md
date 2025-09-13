@@ -21,11 +21,12 @@ chmod +x install_extensions.sh
 
 For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
 
-### Windows or MacOS
+### Windows/MacOS
 
-This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. To install Docker, visit the latest [Docker Desktop release notes](https://docs.docker.com/desktop/release-notes/), then download and use the appropriate installer.
+> [!IMPORTANT]
+> If you are on Windows, please use the `wsl` branch of this repo for the appropriate instructions and configuration to run this container on WSL.
 
-When you open this folder in VSCode, you should be prompted to install recommended extensions. Select the option to install them, so you can use the Dev Containers extension to speed up your workflow.
+This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
 
 ## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
