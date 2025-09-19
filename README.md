@@ -21,12 +21,13 @@ chmod +x install_extensions.sh
 
 For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
 
-### Windows/MacOS
+### Windows/macOS
 
 > [!IMPORTANT]
 > If you are on Windows, please use the `wsl` branch of this repo for the appropriate instructions and configuration to run this container on WSL.
+> Similarly, all macOS users should use the `mac` branch.
 
-This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
+This container is primarily intended for use with Linux; however, WSL and macOS support have been implemented to accomadate for various development environments. Please write a GitHub issue if you notice anything wrong.
 
 ## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
