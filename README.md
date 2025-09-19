@@ -3,30 +3,39 @@
 
 ## Docker Installation
 
-### Linux
+Identify your chip architecture (Intel or Apple Silicon) by running `uname -m`. If you system is an Intel-based Mac, it should output `x86_64`, and if it is Apple Silicon, it will show `arm64`.
 
-For your convenience, a Docker installation script is available by running the following commands in the root of this repository:
+Install the following programs through your prefered method:
+- [XQuartz (X server for display)](https://www.xquartz.org/)
+- [Git](https://git-scm.com/downloads)
+- [VSCode](https://code.visualstudio.com/)
+- [Docker Desktop](https://docs.docker.com/desktop/release-notes/) 
 
+Brew provides an easy way to install all of them at once. Start by installing Brew:
 ```bash
-chmod +x install_docker.sh
-./install_docker.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-To quickly install all recommended VSCode extensions, use the provided script. 
-
+Now, install all of the needed packages:
 ```bash
-chmod +x install_extensions.sh
-./install_extensions.sh
+brew install git --cask visual-studio-code docker xquartz
 ```
 
-For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
+You will need to restart your system to use both Docker and XQuartz. If for some reason you are running a Hackintosh or a macOS VM, it is likely that Docker will complain about Hyper-V for virtualization. Depending on your setup, you will need to add these options `+vmx,+smep,+smap,+hypervisor` to your VM/boot configuration. You will likely have to troubleshoot issues, but feel free to ask questions here. 
 
-### Windows/MacOS
+After restarting, open XQuartz and enable `File > Preferences > Security > Allow connections from network clients`. **Each time you need to run a GUI application in the Docker container, be sure to run `xhost +` to give XQuartz access to X11 forwarding ports.** For more information, see [X11 Forwarding on macOS and Docker](https://gist.github.com/sorny/969fe55d85c9b0035b0109a31cbcb088). It may be beneficial to add a configuration to your system that runs this command automatically.
 
-> [!IMPORTANT]
-> If you are on Windows, please use the `wsl` branch of this repo for the appropriate instructions and configuration to run this container on WSL.
+Once you have installed all the programs, open your terminal and run the following to clone the repo and open it in VSCode.
 
-This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
+```bash
+git clone -b mac https://github.com/MHSeals/mhseals_docker.git
+cd mhseals_docker
+code . # Open folder in VSCode
+```
+
+Once the folder is open in VSCode, install the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. There should be a prompt in the bottom-right corner asking if you would like to install the recommended extensions.
+
+Finally, using `Ctrl+Shift+P`, open the command palette, and select the `Dev Containers: Open in Container` option. You are done!
 
 ## ROS2 SLAM Autonomous Navigation with SLAM Toolbox and Nav2
 
