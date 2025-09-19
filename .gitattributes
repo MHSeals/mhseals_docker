@@ -1,0 +1,4 @@
+.devcontainer/devcontainer.json merge=ours
+.devcontainer/Dockerfile merge=ours
+install_docker.sh merge=ours
+install_extensions.sh merge=ours
