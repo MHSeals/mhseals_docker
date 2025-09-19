@@ -41,7 +41,7 @@ RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 ENV PATH=/workspace/venv/bin:$PATH
-ENV SHELL /bin/bash
+ENV SHELL=/bin/bash
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
