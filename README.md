@@ -3,30 +3,6 @@
 
 ## Docker Installation
 
-### Linux
-
-For your convenience, a Docker installation script is available by running the following commands in the root of this repository:
-
-```bash
-chmod +x install_docker.sh
-./install_docker.sh
-```
-
-To quickly install all recommended VSCode extensions, use the provided script. 
-
-```bash
-chmod +x install_extensions.sh
-./install_extensions.sh
-```
-
-For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
-
-### Windows/MacOS
-
-> [!IMPORTANT]
-> If you are on Windows, please use the `wsl` branch of this repo for the appropriate instructions and configuration to run this container on WSL.
-> This container hasn't been fully tested on a non-Linux OS, so you may experience issues. Please write a GitHub issue if you notice anything wrong. **This container currently has no support for MacOS; however, if you would like to try it yourself, you may fork this repo and make the needed changes.**
-
 Install the following programs:
 - [VcXsrv (X server for display)](https://sourceforge.net/projects/vcxsrv/)
 - [Git](https://git-scm.com/downloads)
