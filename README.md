@@ -11,13 +11,11 @@ Install the following programs:
 
 **Start the Docker Daemon each time you want to work on the project by opening the Docker Desktop application.** The first time you install it, you will be prompted to restart your system.
 
-Once you have installed all the programs, open your terminal and run the following. The current setup is fragile, so please read the notes next to each command to ensure everything is configured correctly. Improvements are actively being made.
+Once you have installed all the programs, open your terminal and run the following to clone the repo and open it in VSCode.
 
 ```bash
-cd $home # Ensure the repo is in the user directory due to the way the Dockerfile is configured
 git clone -b wsl https://github.com/MHSeals/mhseals_docker.git
-mv mhseals_docker roboboat_ws # The name is hardcoded for now, to be fixed
-cd roboboat_ws
+cd mhseals_docker
 code . # Open folder in VSCode
 ```
 
