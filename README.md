@@ -21,6 +21,33 @@ chmod +x install_extensions.sh
 
 For manual installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Be sure to follow all instructions in the [Linux post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
 
+> [!TIP]
+> For those using editors other than VSCode, devcontainers offers a cli tool. Start by installing NVM:
+> ```bash
+> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+> ```
+>
+> Alternatively:
+> ```
+> wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+> ```
+>
+> Then, make the `nvm` command available by resourcing your shell configuration file. I would highly advise ZSH users to lazy load NVM by replacing the generated commands with the [zsh-nvm](https://github.com/lukechilds/zsh-nvm) plugin. Alternatively, replace it with a [lazy loading function](https://github.com/nvm-sh/nvm/issues/730).
+> ```bash
+> source ~/.bashrc # .zshrc or config.fish depending on your shell
+> ```
+>
+> Then, install and use the latest LTS version of npm and Node.
+> ```bash
+> nvm install --lts
+> nvm use --lts
+> ```
+>
+> Finally, install the [devcontainers cli tool (more usage information here)](https://github.com/devcontainers/cli):
+> ```bash
+> npm install -g @devcontainers/cli
+> ```
+
 ### Windows/macOS
 
 > [!IMPORTANT]
