@@ -28,7 +28,7 @@ After restarting, open XQuartz and enable `File > Preferences > Security > Allow
 Once you have installed all the programs, open your terminal and run the following to clone the repo and open it in VSCode.
 
 ```bash
-git clone -b mac https://github.com/MHSeals/mhseals_docker.git
+git clone -b --recurse-submodules mac https://github.com/MHSeals/mhseals_docker.git
 cd mhseals_docker
 code . # Open folder in VSCode
 ```
