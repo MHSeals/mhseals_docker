@@ -1,0 +1,3 @@
+[submodule "src/auto_nav"]
+	path = src/auto_nav
+	url = https://github.com/mhseals/mhseals_sim.git
