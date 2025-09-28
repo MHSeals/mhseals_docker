@@ -141,6 +141,7 @@ Confirm that SLAM Toolbox is running and providing a map. Ensure that Nav2 param
 Run the following command to use the `.gitattributes` file.
 ```bash
 git config merge.ours.driver true
+git pull --no-ff origin main
 ```
 And use `git status` to determine which files you need to handle merges for.
 
