@@ -167,6 +167,9 @@ Check the URDF/Xacro files and the rsp.launch.py to ensure the robot description
 - **Navigation Errors:**
 Confirm that SLAM Toolbox is running and providing a map. Ensure that Nav2 parameters match your robot’s configuration (e.g., footprint, sensor sources).
 
+- **Docker Container Mount**
+Check to ensure you don't have multiple containers trying to mount the same folder by running `docker ps` and seeing if there are any active containers that you may have started earlier. If you see any related containers, run `docker stop <NAME-OF-CONTAINER>` and try opening the container again. Another common issue is the inability to pull containers from Docker Hub. Make sure that you have verified the email of your Docker account and test if you can pull the image by running `docker pull osrf/ros:humble-desktop`. It will immediately display an error message, instructing you to verify your account if you haven't already done so.
+
 ### Resources
 
 - Robot Operating System [(ROS 2 Humble)](https://docs.ros.org/en/humble/index.html)
