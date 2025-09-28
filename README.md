@@ -14,7 +14,7 @@ Install the following programs:
 Once you have installed all the programs, open your terminal and run the following to clone the repo and open it in VSCode.
 
 ```bash
-git clone -b wsl https://github.com/MHSeals/mhseals_docker.git
+git clone -b --recurse-submodules wsl https://github.com/MHSeals/mhseals_docker.git
 cd mhseals_docker
 code . # Open folder in VSCode
 ```
