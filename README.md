@@ -1,9 +1,14 @@
 > [!NOTE]
 > This README was sourced directly from [a separate guide on GitHub](https://github.com/taherfattahi/ros2-slam-auto-navigation). Needed changes will be made as we continue to build upon the project as a base. If you plan to write more comprehensive documentation (or would like to see more detailed guides), please view the official [MHSeals Documentation](https://docs.mhsroboboat.com).
 
-## Docker Installation
+## Installation
 
 ### Linux
+
+Clone the repo (with packages):
+```bash
+git clone --recurse-submodules https://github.com/mhseals/mhseals_docker.git
+```
 
 For your convenience, a Docker installation script is available by running the following commands in the root of this repository:
 
