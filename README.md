@@ -175,6 +175,13 @@ Confirm that SLAM Toolbox is running and providing a map. Ensure that Nav2 param
 - **Docker Container Mount**
 Check to ensure you don't have multiple containers trying to mount the same folder by running `docker ps` and seeing if there are any active containers that you may have started earlier. If you see any related containers, run `docker stop <NAME-OF-CONTAINER>` and try opening the container again. Another common issue is the inability to pull containers from Docker Hub. Make sure that you have verified the email of your Docker account and test if you can pull the image by running `docker pull osrf/ros:humble-desktop`. It will immediately display an error message, instructing you to verify your account if you haven't already done so.
 
+- **PostCreate Command Error:**
+Run:
+```
+sudo rosdep update && sudo rosdep install --from-paths src/auto_nav --ignore-src -y && echo 'source /opt/ros/humble/setup.bash && source /workspace/venv/bin/activate' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ### Resources
 
 - Robot Operating System [(ROS 2 Humble)](https://docs.ros.org/en/humble/index.html)
