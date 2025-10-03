@@ -10,6 +10,11 @@ Clone the repo (with packages):
 git clone --recurse-submodules https://github.com/mhseals/mhseals_docker.git
 ```
 
+If you didn't include the recurse-submodules flag then run to pull each needed submodule:
+```
+git submodule foreach git pull origin main
+```
+
 For your convenience, a Docker installation script is available by running the following commands in the root of this repository:
 
 ```bash
