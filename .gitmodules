@@ -4,12 +4,9 @@
 [submodule "src/mhsboat_ctrl"]
 	path = src/mhsboat_ctrl
 	url = https://github.com/mhseals/mhsboat_ctrl.git
-[submodule "ros_tcp_endpoint"]
-	path = ros_tcp_endpoint
-	url = https://github.com/Unity-Technologies/ROS-TCP-Endpoint
 [submodule "src/ros_tcp_endpoint"]
 	path = src/ros_tcp_endpoint
-	url = https://github.com/Unity-Technologies/ROS-TCP-Endpoint
+	url = https://github.com/MHSeals/ROS-TCP-Endpoint.git
 	branch = main-ros2
 [submodule "src/boat_interfaces"]
 	path = src/boat_interfaces
