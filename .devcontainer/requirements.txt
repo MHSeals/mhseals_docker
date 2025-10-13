@@ -1,3 +1,6 @@
-autopep8
 matplotlib
-numpy
+opencv-contrib-python
+pyyaml
+scikit-learn
+setuptools
+transforms3d

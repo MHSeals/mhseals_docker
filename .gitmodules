@@ -11,3 +11,6 @@
 	path = src/ros_tcp_endpoint
 	url = https://github.com/Unity-Technologies/ROS-TCP-Endpoint
 	branch = main-ros2
+[submodule "src/boat_interfaces"]
+	path = src/boat_interfaces
+	url = https://github.com/mhseals/boat_interfaces

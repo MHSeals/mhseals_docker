@@ -1,0 +1,16 @@
+ros-humble-gazebo-ros-pkgs
+ros-humble-gazebo-ros2-control
+ros-humble-joint-state-publisher
+ros-humble-joint-state-publisher-gui
+ros-humble-nav2-bringup
+ros-humble-nav2-core
+ros-humble-robot-state-publisher
+ros-humble-ros2-control
+ros-humble-ros2-controllers
+ros-humble-ros2launch
+ros-humble-rosidl-default-generators
+ros-humble-rosidl-default-runtime
+ros-humble-rviz2
+ros-humble-slam-toolbox
+ros-humble-twist-mux
+ros-humble-xacro

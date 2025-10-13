@@ -15,27 +15,20 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+WORKDIR /home/${USERNAME}/roboboat_ws
+COPY requirements.txt .
+COPY apt-packages.txt .
+
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \
        build-essential \
-       ros-humble-xacro \
-       ros-humble-gazebo-ros-pkgs \
-       ros-humble-ros2-control \
-       ros-humble-ros2-controllers \
-       ros-humble-gazebo-ros2-control \
-       ros-humble-slam-toolbox \
-       ros-humble-navigation2 \
-       ros-humble-nav2-bringup \
-       ros-humble-twist-mux \
-       ros-humble-rviz2 \
+    && xargs sudo apt-get -y install < apt-packages.txt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Virtualize and install Python packages, placed in a lower layer to minimize rebuilds
-WORKDIR /home/${USERNAME}/roboboat_ws
-COPY requirements.txt .
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
