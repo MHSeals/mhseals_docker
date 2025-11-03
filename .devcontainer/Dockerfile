@@ -40,11 +40,8 @@ RUN python3 -m venv --system-site-packages /workspace/venv \
 
 ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL=/bin/bash
-ENV HOME=/home/${USERNAME}
-ENV GZ_SIM_RESOURCE_PATH=""
-ENV GZ_SIM_SYSTEM_PLUGIN_PATH=""
-ENV GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/models:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/world_models:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/worlds"
-ENV GZ_SIM_SYSTEM_PLUGIN_PATH="${GZ_SIM_SYSTEM_PLUGIN_PATH}:${HOME}/roboboat_ws/install/lib"
+ENV GZ_SIM_RESOURCE_PATH="/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/models:/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/world_models:/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/worlds"
+ENV GZ_SIM_SYSTEM_PLUGIN_PATH="/home/${USERNAME}/roboboat_ws/install/lib"
 
 RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/roboboat_ws
 USER ${USERNAME}
