@@ -19,23 +19,34 @@ WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
 
-RUN apt-get update && apt-get upgrade -y \
+RUN apt-get update && apt-get install -y wget lsb-release gnupg \
+    && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/gazebo.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/gazebo.gpg] \
+    http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \
+    | tee /etc/apt/sources.list.d/gazebo-stable.list \
+    && apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \
        build-essential \
-    && xargs sudo apt-get -y install < apt-packages.txt \
+    && xargs apt-get -y install < apt-packages.txt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Virtualize and install Python packages, placed in a lower layer to minimize rebuilds
+# Python virtual environment
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL=/bin/bash
+ENV HOME=/home/${USERNAME}
+ENV GZ_SIM_RESOURCE_PATH=""
+ENV GZ_SIM_SYSTEM_PLUGIN_PATH=""
+ENV GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/models:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/world_models:${HOME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/worlds"
+ENV GZ_SIM_SYSTEM_PLUGIN_PATH="${GZ_SIM_SYSTEM_PLUGIN_PATH}:${HOME}/roboboat_ws/install/lib"
 
-# [Optional] Set the default user. Omit if you want to keep the default as root.
-USER $USERNAME
+RUN chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/roboboat_ws
+USER ${USERNAME}
+
 CMD ["/bin/bash"]
