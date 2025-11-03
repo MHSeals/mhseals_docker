@@ -38,6 +38,7 @@ RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
+ENV USERNAME=${USERNAME}
 ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL=/bin/bash
 ENV GZ_SIM_RESOURCE_PATH="/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/models:/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/world_models:/home/${USERNAME}/roboboat_ws/src/asv_wave_sim/gz-waves-models/worlds"
