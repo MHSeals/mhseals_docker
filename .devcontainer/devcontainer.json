@@ -1,5 +1,5 @@
 {
-    "name": "ROS 2 Development Container",
+    "name": "Roboboat Development Container",
     "privileged": true,
     "remoteUser": "${env:USER}",
     "build": {
@@ -7,6 +7,11 @@
         "args": {
             "USERNAME": "${env:USER}"
         }
+    },
+    "features": {
+      "./features/gazebo": {
+        "variant": "garden"
+      }
     },
     "workspaceFolder": "${env:HOME}/roboboat_ws",
     "workspaceMount": "source=${localWorkspaceFolder},target=${env:HOME}/roboboat_ws,type=bind",
@@ -18,7 +23,7 @@
                 "twxs.cmake",
                 "donjayamanne.python-extension-pack",
                 "eamodio.gitlens",
-                "ms-iot.vscode-ros"
+                "Ranch-Hand-Robotics.rde-pack"
             ]
         }
     },
@@ -38,5 +43,5 @@
         "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
     ],
     "forwardPorts": [10000],
-    "postCreateCommand": "sudo apt update && sudo rosdep update && sudo rosdep install --from-paths src --ignore-src -y && cat .devcontainer/.bashrc >> ~/.bashrc"
+    "postCreateCommand": ".devcontainer/postcreate.sh"
 }

@@ -1,0 +1,11 @@
+{
+  "name": "Gazebo Installer",
+  "options": {
+    "variant": {
+      "type": "string",
+      "enum": ["classic", "garden"],
+      "default": "garden",
+      "description": "Select Gazebo version to install"
+    }
+  }
+}

@@ -8,7 +8,7 @@ echo "Determining Linux distro"
 
 if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     echo "Arch-based distro Docker installation running..."
-    sudo pacman -Syu docker
+    sudo pacman -Syu docker xorg-xwayland
 elif [[ "$ID" == "ubuntu" ]]; then
     echo "Ubuntu Docker installation running..."
     
@@ -28,6 +28,9 @@ elif [[ "$ID" == "ubuntu" ]]; then
 
     # Install latest version
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    # Make sure XWayland is installed to be safe
+    sudo apt-get install xwayland
 elif [[ "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
     echo "Debian-based distro Docker installation running..."
     
@@ -47,6 +50,9 @@ elif [[ "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
 
     # Install latest version
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    # Make sure XWayland is installed to be safe
+    sudo apt-get install xwayland
 else
     echo "Installation failed!"
     echo "Unsupported distro: $ID"
