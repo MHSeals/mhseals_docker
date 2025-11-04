@@ -8,6 +8,7 @@
   "workspaceFolder": "/home/${env:USER}/roboboat_ws",
   "postCreateCommand": ".devcontainer/postcreate.sh",
   "remoteUser": "${env:USER}",
+  "overrideCommand": true,
   "customizations": {
     "vscode": {
       "extensions":[

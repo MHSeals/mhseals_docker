@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
       args:
         USERNAME: ${USER}
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
     container_name: roboboat_dev
     privileged: true
     network_mode: "host"
@@ -21,6 +23,5 @@ services:
       - /dev/dri:/dev/dri:cached
     ports:
       - "10000:10000"
-    user: "${USER_UID}:${USER_GID}"
+    user: "${UID:-1000}:${GID:-1000}"
     working_dir: /home/${USER}/roboboat_ws
-    command: /bin/bash
