@@ -1,0 +1,26 @@
+services:
+  roboboat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USERNAME: ${USER}
+    container_name: roboboat_dev
+    privileged: true
+    network_mode: "host"
+    ipc: "host"
+    pid: "host"
+    environment:
+      ROS_LOCALHOST_ONLY: "1"
+      ROS_DOMAIN_ID: "42"
+      ROS_WS: "/home/${USER}/roboboat_ws"
+      DISPLAY: ${DISPLAY}
+    volumes:
+      - ${PWD}:/home/${USER}/roboboat_ws
+      - /tmp/.X11-unix:/tmp/.X11-unix:cached
+      - /dev/dri:/dev/dri:cached
+    ports:
+      - "10000:10000"
+    user: "${USER_UID}:${USER_GID}"
+    working_dir: /home/${USER}/roboboat_ws
+    command: /bin/bash
