@@ -67,6 +67,9 @@ Install the following programs:
 
 ### Mac
 
+> [!IMPORTANT]
+> If you are willing to troubleshoot installing a newer version of OpenGL on an X11 Server (XQuartz), follow the steps below and document what you do as much as possible. Otherwise, simply install Linux on your Mac and follow the Linux instructions as normal.
+
 Identify your chip architecture (Intel or Apple Silicon) by running `uname -m`. If you system is an Intel-based Mac, it should output `x86_64`, and if it is Apple Silicon, it will show `arm64`.
 
 Install the following programs through your preferred method:
@@ -88,13 +91,3 @@ brew install git --cask visual-studio-code docker xquartz
 You will need to restart your system to use both Docker and XQuartz. If for some reason you are running a Hackintosh or a macOS VM, it is likely that Docker will complain about Hyper-V for virtualization. Depending on your setup, you will need to add these options `+vmx,+smep,+smap,+hypervisor` to your VM/boot configuration. You will likely have to troubleshoot issues, but feel free to ask questions here. 
 
 After restarting, open XQuartz and enable `File > Preferences > Security > Allow connections from network clients`. **Each time you need to run a GUI application in the Docker container, be sure to run `xhost +` to give XQuartz access to X11 forwarding ports.** For more information, see [X11 Forwarding on macOS and Docker](https://gist.github.com/sorny/969fe55d85c9b0035b0109a31cbcb088). It may be beneficial to add a configuration to your system that runs this command automatically.
-
-Once you have installed all the programs, open your terminal and run the following to clone the repo and open it in VSCode.
-
-```bash
-git clone -b --recurse-submodules mac https://github.com/MHSeals/mhseals_docker.git
-cd mhseals_docker
-code . # Open folder in VSCode
-```
-
-Finally, using `Ctrl+Shift+P`, open the command palette, and select the `Dev Containers: Open in Container` option. You are done!
