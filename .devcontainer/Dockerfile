@@ -18,7 +18,6 @@ WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
 
-RUN sed -i 's/\r$//' apt-packages.txt
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
