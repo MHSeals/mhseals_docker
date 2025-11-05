@@ -16,43 +16,8 @@ IF %ERRORLEVEL% NEQ 0 (
     echo Chocolatey is already installed.
 )
 
-echo Installing applications if missing...
-
-:: Install VS Code
-where code >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo Installing VS Code...
-    choco install -y vscode
-) ELSE (
-    echo VS Code is already installed.
-)
-
-:: Install Git
-where git >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo Installing Git...
-    choco install -y git
-) ELSE (
-    echo Git is already installed.
-)
-
-:: Install VCXSRV
-choco list --exact vcxsrv >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo Installing VCXSRV...
-    choco install -y vcxsrv
-) ELSE (
-    echo VCXSRV is already installed.
-)
-
-:: Install Docker Desktop
-where "docker" >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo Installing Docker Desktop...
-    choco install -y docker-desktop
-) ELSE (
-    echo Docker Desktop is already installed.
-)
+echo Installing VSCode, Git, VCXSRV, and Docker if missing...
+choco upgrade -y vcxsrv docker-desktop git vscode --ignore-missing
 
 :: Copy docker-compose.override.windows.yml to docker-compose.override.yml
 IF EXIST ".\.devcontainer\docker-compose.override.windows.yml" (
@@ -61,6 +26,10 @@ IF EXIST ".\.devcontainer\docker-compose.override.windows.yml" (
 ) ELSE (
     echo Warning: .devcontainer\docker-compose.override.windows.yml not found!
 )
+
+echo Synchronizing the time...
+net start W32Time > NUL 2>&1
+w32tm /resync
 
 echo.
 echo Installation complete!
