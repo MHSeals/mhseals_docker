@@ -7,6 +7,6 @@
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
     ],
-    "cmake.sourceDirectory": "/home/lunarz/roboboat_ws/src/auto-nav",
+    "cmake.sourceDirectory": "/home/lunarz/mhseals_docker/src/auto_nav",
     "remote.autoForwardPortsSource": "hybrid"
 }

@@ -1,4 +1,4 @@
 install/
 build/
 log/
-docker-compose.override.yml
+.devcontainer/docker-compose.override.yml

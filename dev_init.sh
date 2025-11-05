@@ -2,7 +2,7 @@
 set -e
 
 cd ~/roboboat_ws
-colcon build --symlink-install
+colcon build
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 echo "[dev_init] Dev environment ready"
