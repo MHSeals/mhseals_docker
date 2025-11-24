@@ -2,7 +2,7 @@ services:
   roboboat:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
       args:
         USERNAME: ${USER:-roboboat}
         USER_UID: ${UID:-1000}
@@ -21,7 +21,20 @@ services:
       - ${PWD}:/home/${USER}/roboboat_ws
       - /tmp/.X11-unix:/tmp/.X11-unix:cached
       - /dev/dri:/dev/dri:cached
-    ports:
-      - "10000:10000"
     user: "${UID:-1000}:${GID:-1000}"
     working_dir: /home/${USER}/roboboat_ws
+  sitl: # Optional component, still working out how to centralize in configuration
+    build:
+      context: .
+      dockerfile: Dockerfile.sitl
+    container_name: ardupilot_sitl
+    network_mode: "host"
+    environment:
+      VEHICLE: "Rover"
+      DISPLAY: ${DISPLAY}
+      SITL_EXTRA_ARGS: "--console --map --add-param-file=/param/boat.param --model JSON:127.0.0.1 --out tcp:0.0.0.0:5762 "
+    volumes:
+      - ./boat.param:/param/boat.param:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix:cached
+      - /dev/dri:/dev/dri:cached
+    restart: unless-stopped

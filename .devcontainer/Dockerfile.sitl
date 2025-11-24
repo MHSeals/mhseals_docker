@@ -1,0 +1,38 @@
+FROM ardupilot/ardupilot-dev-base:latest
+
+ARG USERNAME=ardupilot
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+# Create user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && apt-get update \
+    && apt-get install -y sudo git python3-pip python3-venv \
+    && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Silly keyboard hack
+RUN apt-get update \
+    && apt-get install -y debconf-utils \
+    && echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections \
+    && echo "keyboard-configuration keyboard-configuration/layout string English (US)" | debconf-set-selections \
+    && echo "keyboard-configuration keyboard-configuration/modelcode string pc105" | debconf-set-selections \
+    && echo "keyboard-configuration keyboard-configuration/model string Generic 105-key PC" | debconf-set-selections \
+    && echo "tzdata tzdata/Areas select Etc" | debconf-set-selections \
+    && echo "tzdata tzdata/Zones/Etc select UTC" | debconf-set-selections
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+
+RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules
+
+WORKDIR /home/$USERNAME/ardupilot
+ENV USER=$USERNAME
+RUN ./Tools/environment_install/install-prereqs-ubuntu.sh -y \
+    && . ~/.profile \
+    && ./waf configure --board sitl \
+    && ./waf build
+
+COPY sitl_entrypoint.sh /sitl_entrypoint.sh
+ENTRYPOINT ["/sitl_entrypoint.sh"]
