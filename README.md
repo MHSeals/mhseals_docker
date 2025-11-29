@@ -115,7 +115,7 @@ There are three primary components to the simulation stack:
 
 For the Unity physics sim, visit [this page](https://github.com/MHSeals/mhseals_asv_sim) and follow the instructions for the setup.
 
-The ROS packages/nodes you run for navigation are all completely up to you depending on what needs to be tested; however, be sure to always use the `ros_tcp_endpoint` package by running `ros2 run ros_tcp_endpoint default_server_endpoint --ros-args --<arg>:=<value>` (`ROS_IP` and `ROS_TCP_PORT` are useful args for matching the connection with Unity).
+The ROS packages/nodes you run for navigation are all completely up to you depending on what needs to be tested; however, be sure to always use the `ros_tcp_endpoint` package by running `ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p <arg>:=<value>` (`ROS_IP` and `ROS_TCP_PORT` are useful args for matching the connection with Unity).
 
 Finally, in order to start the Ardupilot SITL, you must start the devcontainer. After the it's running, in VSCode, open the activity bar. From there, select the "Remote Explorer" option. In the "Other Containers" section, should should be able to attach a VSCode window to `mhseals_docker_devcontainer (ardupilot_sitl)` (you may also just open it through a local terminal by running `docker run -it ardupilot_sitl bash`). After you have access to the terminal, run the following command below (please note it will fail initially unless the Unity connection is already up):
 
@@ -126,5 +126,5 @@ Tools/autotest/sim_vehicle.py -v "$VEHICLE" $SITL_EXTRA_ARGS
 and connect it to ROS by starting the MAVROS node
 
 ```
-ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:9002
+ros2 launch mavros apm.launch fcu_url:=tcp://127.0.0.1:5763
 ```
