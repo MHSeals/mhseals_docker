@@ -20,5 +20,8 @@ ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:9002
 colcon build
 source install/setup.bash
 
+--- ROS TCP Endpoint ---
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<ip> -p ROS_TCP_PORT:=<port>
+
 EOF
 }
