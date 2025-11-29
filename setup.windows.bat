@@ -1,6 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: TODO: Need to add automatic VSCode configuration for no port forwarding to allow SITL to work
+
 :: Elevating script to admin
 FSUTIL DIRTY query %SystemDrive% >NUL || (
     PowerShell "Start-Process -FilePath cmd.exe -Args '/C CHDIR /D %CD% & ""%0"" %*' -Verb RunAs"

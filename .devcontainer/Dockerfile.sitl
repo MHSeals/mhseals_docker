@@ -3,12 +3,15 @@ FROM ardupilot/ardupilot-dev-base:latest
 ARG USERNAME=ardupilot
 ARG USER_UID=1000
 ARG USER_GID=1000
+ARG MIRROR=http://mirror.us.leaseweb.net/ubuntu
+
+RUN sed -i "s|http://archive.ubuntu.com/ubuntu|$MIRROR|g" /etc/apt/sources.list
 
 # Create user
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && apt-get update \
-    && apt-get install -y sudo git python3-pip python3-venv \
+    && apt-get install -y sudo git python3-pip python3-venv python3-testresources \
     && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
@@ -25,14 +28,20 @@ RUN apt-get update \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-RUN git clone https://github.com/ArduPilot/ardupilot.git --recurse-submodules
+RUN git clone https://github.com/ardupilot/ardupilot.git --recurse-submodules
 
-WORKDIR /home/$USERNAME/ardupilot
 ENV USER=$USERNAME
+WORKDIR /home/$USERNAME/ardupilot
 RUN ./Tools/environment_install/install-prereqs-ubuntu.sh -y \
-    && . ~/.profile \
     && ./waf configure --board sitl \
-    && ./waf build
+    && ./waf build -v
 
+USER root
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER $USERNAME
+ENV SHELL=/bin/bash
 COPY sitl_entrypoint.sh /sitl_entrypoint.sh
 ENTRYPOINT ["/sitl_entrypoint.sh"]
+CMD ["sleep", "infinity"]

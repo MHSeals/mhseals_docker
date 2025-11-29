@@ -25,7 +25,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     for pkg in docker.io docker-doc podman-docker containerd runc; do yay -Rns $pkg; done
 
     echo "Installing all required packages..."
-    yay -S --noconfirm docker xorg-xwayland visual-studio-code-bin
+    yay -S --noconfirm docker xorg-xwayland visual-studio-code-bin python-hjson
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
     echo "Debian-based distro installation running..."
 
@@ -42,7 +42,8 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
 
     # Install prerequisites
     sudo apt-get update
-    sudo apt-get install -y ca-certificates curl gnupg lsb-release
+    sudo apt-get install -y ca-certificates curl gnupg lsb-release python3-pip
+    pip install hjson
 
     # Add Docker's official GPG key
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -94,6 +95,16 @@ if [[ -f .vscode/extensions.json ]]; then
 else
     echo "No .vscode/extensions.json found. Skipping extensions."
 fi
+
+echo "Adding VSCode port forwarding configuration..."
+VSC_DIR="$HOME/.config/Code/User/"
+VSC_CONFIG="$VSC_DIR/settings.json"
+mkdir -p $VSC_DIR
+touch $VSC_CONFIG
+hjson -j $VSC_CONFIG > $VSC_CONFIG.tmp \
+    && mv $VSC_CONFIG.tmp $VSC_CONFIG \
+    && jq '.["remote.autoForwardPorts"] = false' $VSC_CONFIG > $VSC_CONFIG.tmp \
+    && mv $VSC_CONFIG.tmp $VSC_CONFIG
 
 echo "Running prebuild script..."
 bash .devcontainer/prebuild.sh
