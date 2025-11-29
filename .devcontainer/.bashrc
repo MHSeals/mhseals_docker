@@ -5,3 +5,20 @@ alias rviz2="rviz2 -d $ROS_WS/config/dark.rviz --stylesheet $ROS_WS/config/dark.
 if [ -d "$ROS_WS/install" ]; then
   source install/setup.bash
 fi
+
+# TODO: Improve this by reading from a text file
+help () {
+cat << 'EOF'
+
+--- SITL Run Command ---
+Tools/autotest/sim_vehicle.py -v "$VEHICLE" $SITL_EXTRA_ARGS
+
+--- MAVROS Build Command ---
+ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:9002
+
+--- ROS Build Commands ---
+colcon build
+source install/setup.bash
+
+EOF
+}

@@ -15,7 +15,7 @@ fi
 
 echo "Installing packages..."
 brew install --cask docker visual-studio-code
-brew install jq
+brew install jq hjson
 
 # Start Docker Desktop if not running
 if ! pgrep -x "Docker" > /dev/null; then
@@ -43,6 +43,16 @@ if [[ -f .vscode/extensions.json ]]; then
 else
     echo "No .vscode/extensions.json found. Skipping extensions."
 fi
+
+echo "Adding VSCode port forwarding configuration..."
+VSC_DIR="$HOME/Library/Application Support/Code/User"
+VSC_CONFIG="$VSC_DIR/settings.json"
+mkdir -p "$VSC_DIR"
+touch "$VSC_CONFIG"
+hjson -j $VSC_CONFIG > $VSC_CONFIG.tmp \
+    && mv $VSC_CONFIG.tmp $VSC_CONFIG \
+    && jq '.["remote.autoForwardPorts"] = false' $VSC_CONFIG > $VSC_CONFIG.tmp \
+    && mv $VSC_CONFIG.tmp $VSC_CONFIG
 
 echo "Running prebuild script..."
 bash .devcontainer/prebuild.sh
