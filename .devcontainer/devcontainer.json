@@ -9,7 +9,11 @@
       "variant": "classic"
     }
   },
-  "service": "roboboat",
+  "service": "dev",
+  "runServices": [
+    "dev"
+    // "sitl"
+  ],
   "workspaceFolder": "/home/${env:USER}/roboboat_ws",
   "postCreateCommand": ".devcontainer/postcreate.sh",
   "remoteUser": "${env:USER}",
