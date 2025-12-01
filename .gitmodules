@@ -17,6 +17,3 @@
 [submodule "src/asv_wave_sim"]
 	path = src/asv_wave_sim
 	url = https://github.com/MHSeals/asv_wave_sim
-[submodule "src/epsilon_control"]
-	path = src/epsilon_control
-	url = https://github.com/1unarzDev/epsilon_control.git
