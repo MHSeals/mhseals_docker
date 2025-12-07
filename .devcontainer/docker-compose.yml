@@ -27,6 +27,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.sitl
+      args: 
+        MIRROR: http://mirror.us.leaseweb.net/ubuntu
     container_name: ardupilot_sitl
     network_mode: "host"
     environment:
