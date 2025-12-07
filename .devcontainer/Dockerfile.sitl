@@ -3,7 +3,7 @@ FROM ardupilot/ardupilot-dev-base:latest
 ARG USERNAME=ardupilot
 ARG USER_UID=1000
 ARG USER_GID=1000
-ARG MIRROR=http://mirror.us.leaseweb.net/ubuntu
+ARG MIRROR=http://archive.ubuntu.com/ubuntu
 
 RUN sed -i "s|http://archive.ubuntu.com/ubuntu|$MIRROR|g" /etc/apt/sources.list
 
@@ -37,7 +37,10 @@ RUN ./Tools/environment_install/install-prereqs-ubuntu.sh -y \
     && ./waf build -v
 
 USER root
-RUN apt-get clean \
+
+RUN apt-get install locales \
+    && locale-gen en_US.UTF-8 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 USER $USERNAME

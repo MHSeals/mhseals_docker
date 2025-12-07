@@ -13,6 +13,10 @@ cat << 'EOF'
 --- SITL Run Command ---
 Tools/autotest/sim_vehicle.py -v "$VEHICLE" $SITL_EXTRA_ARGS
 
+--- Kill Process On Port ---
+sudo lsof -i :<port>
+kill -9 <pid>
+
 --- MAVROS Build Command ---
 ros2 launch mavros apm.launch fcu_url:=udp://127.0.0.1:9002
 
