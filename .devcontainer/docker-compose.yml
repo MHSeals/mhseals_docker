@@ -1,12 +1,14 @@
 services:
   dev:
+    image: lunarzdev/mhseals-dev-linux
+    pull_policy: missing
     build:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        USERNAME: ${USER:-roboboat}
-        USER_UID: ${UID:-1000}
-        USER_GID: ${GID:-1000}
+        USERNAME: roboboat
+        USER_UID: ${UID-1000}
+        USER_GID: ${GID-1000}
     container_name: roboboat_dev
     privileged: true
     network_mode: "host"
@@ -15,19 +17,24 @@ services:
     environment:
       ROS_LOCALHOST_ONLY: "1"
       ROS_DOMAIN_ID: "42"
-      ROS_WS: "/home/${USER}/roboboat_ws"
+      ROS_WS: "/home/roboboat/roboboat_ws"
       DISPLAY: ${DISPLAY}
     volumes:
-      - ${PWD}:/home/${USER}/roboboat_ws
+      - ${PWD}:/home/roboboat/roboboat_ws
       - /tmp/.X11-unix:/tmp/.X11-unix:cached
       - /dev/dri:/dev/dri:cached
     user: "${UID:-1000}:${GID:-1000}"
-    working_dir: /home/${USER}/roboboat_ws
-  sitl: # Optional component, still working out how to centralize in configuration
+    working_dir: /home/roboboat/roboboat_ws
+  sitl:
+    image: lunarzdev/mhseals-sitl-linux
+    pull_policy: missing
     build:
       context: .
       dockerfile: Dockerfile.sitl
-      args: 
+      args:
+        USERNAME: ardupilot
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
         MIRROR: http://mirror.us.leaseweb.net/ubuntu
     container_name: ardupilot_sitl
     network_mode: "host"

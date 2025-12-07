@@ -1,9 +1,13 @@
 services:
   roboboat:
+    image: lunarzdev/mhseals-dev-windows
+    pull_policy: missing
     environment:
       DISPLAY: host.docker.internal:0
     volumes: []
   sitl:
+    image: lunarzdev/mhseals-sitl-windows
+    pull_policy: missing
     environment:
       DISPLAY: host.docker.internal:0
     volumes:
