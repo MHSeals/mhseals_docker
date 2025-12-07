@@ -14,9 +14,9 @@
     "dev",
     "sitl"
   ],
-  "workspaceFolder": "/home/${env:USER}/roboboat_ws",
+  "workspaceFolder": "/home/roboboat/roboboat_ws",
   "postCreateCommand": ".devcontainer/postcreate.sh",
-  "remoteUser": "${env:USER}",
+  "remoteUser": "roboboat",
   "overrideCommand": true,
   "customizations": {
     "vscode": {
