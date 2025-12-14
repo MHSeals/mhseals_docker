@@ -12,7 +12,7 @@
   "service": "dev",
   "runServices": [
     "dev",
-    "sitl"
+    // "sitl"
   ],
   "workspaceFolder": "/home/roboboat/roboboat_ws",
   "postCreateCommand": ".devcontainer/postcreate.sh",
