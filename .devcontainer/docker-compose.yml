@@ -41,7 +41,7 @@ services:
     environment:
       VEHICLE: "Rover"
       DISPLAY: ${DISPLAY}
-      SITL_EXTRA_ARGS: "--console --map --add-param-file=/param/boat.param --model JSON:127.0.0.1 --out tcp:0.0.0.0:5762 "
+      SITL_EXTRA_ARGS: "--console --map --add-param-file=/param/boat.param --model JSON:127.0.0.1 --out tcp-l:5762"
     volumes:
       - ./boat.param:/param/boat.param:ro
       - /tmp/.X11-unix:/tmp/.X11-unix:cached

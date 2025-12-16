@@ -17,3 +17,6 @@
 ; [submodule "src/asv_wave_sim"]
 ; 	path = src/asv_wave_sim
 ; 	url = https://github.com/MHSeals/asv_wave_sim
+[submodule "src/mhseals_nav"]
+	path = src/mhseals_nav
+	url = https://github.com/MHSeals/mhseals_nav.git
