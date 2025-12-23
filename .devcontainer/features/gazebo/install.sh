@@ -6,7 +6,7 @@ VARIANT=${VARIANT:-garden}
 if [ "${VARIANT}" = "classic" ]; then
   apt-get update && apt-get install -y \
     ros-humble-gazebo-ros-pkgs ros-humble-gazebo-ros2-control
-else
+elif [ "${VARIANT}" = "garden" ]; then
   # Get installation utilities
   apt-get update && apt-get install -y wget lsb-release gnupg
   wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/gazebo.gpg
