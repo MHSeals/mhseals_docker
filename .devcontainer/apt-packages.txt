@@ -22,4 +22,7 @@ ros-humble-tf2-ros
 ros-humble-robot-localization
 ros-humble-rqt-graph
 ros-humble-topic-tools
+ros-humble-zed-msgs
+ros-humble-nmea-msgs
+ros-humble-image-transport-plugins
 geographiclib-tools

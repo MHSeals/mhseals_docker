@@ -25,7 +25,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     for pkg in docker.io docker-doc podman-docker containerd runc; do yay -Rns $pkg; done
 
     echo "Installing all required packages..."
-    yay -S --noconfirm docker xorg-xwayland visual-studio-code-bin python-hjson
+    yay -S --noconfirm docker xorg-xwayland visual-studio-code-bin python-hjson nvidia-container-toolkit
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
     echo "Debian-based distro installation running..."
 
@@ -66,6 +66,14 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
     sudo apt update
     sudo apt install code
+
+    echo "Installing NVIDIA container tools..."
+    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    
+    sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 else
     echo "Installation failed!"
     echo "Unsupported distro: $ID"

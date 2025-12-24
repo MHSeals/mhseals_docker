@@ -9,7 +9,11 @@ if [ -n "$WSL_DISTRO_NAME" ]; then
 elif [ "$(uname -s)" = "Darwin" ]; then
     OS_TYPE="mac"
 elif [ "$(uname -s)" = "Linux" ]; then
-    OS_TYPE="linux"
+    if [ "$(uname -m)" = "aarch64" ]; then
+        OS_TYPE="jetson"
+    else
+        OS_TYPE="linux"
+    fi
 else
     echo "Unsupported OS detected, exiting..."
     exit 1

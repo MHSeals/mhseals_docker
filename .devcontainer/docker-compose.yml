@@ -19,12 +19,19 @@ services:
       ROS_DOMAIN_ID: "42"
       ROS_WS: "/home/roboboat/roboboat_ws"
       DISPLAY: ${DISPLAY}
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
     volumes:
       - ${PWD}:/home/roboboat/roboboat_ws
       - /tmp/.X11-unix:/tmp/.X11-unix:cached
-      - /dev/dri:/dev/dri:cached
+      - /dev:/dev 
     user: "${UID:-1000}:${GID:-1000}"
     working_dir: /home/roboboat/roboboat_ws
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
   sitl:
     image: lunarzdev/mhseals-sitl:linux
     pull_policy: missing
