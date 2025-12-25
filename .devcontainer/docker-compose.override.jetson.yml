@@ -1,1 +1,13 @@
-# Empty because requirements are the same
+services:
+  dev:
+    environment:
+      DISPLAY: ""
+      NVIDIA_VISIBLE_DEVICES: ""
+      NVIDIA_DRIVER_CAPABILITIES: ""
+    volumes: []
+    deploy: {}
+  sitl:
+    environment:
+      DISPLAY: ""
+    volumes:
+      - ./boat.param:/param/boat.param:ro
