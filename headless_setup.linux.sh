@@ -38,7 +38,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     
     echo "Installing needed setup tools..."
     sudo apt-get update 
-    sudo apt-get install gnupg wget curl 
+    sudo apt-get install -y gnupg wget curl 
 
     # Docker repo setup
     DOCKER_REPO="https://download.docker.com/linux/${ID}"
