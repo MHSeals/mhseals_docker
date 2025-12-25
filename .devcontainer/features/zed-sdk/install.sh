@@ -43,7 +43,7 @@ elif [ "$TARGET_PLATFORM" = "jetson" ]; then
     echo "[INFO] Downloading ZED SDK for Jetson L4T $L4T_VERSION from $ZED_URL ..."
     wget -q -O "$ZED_RUN_FILE" "$ZED_URL"
 
-    if ! file "$ZED_RUN_FILE" | grep -q 'ELF'; then
+    if ! file "$ZED_RUN_FILE" | grep -q 'executable'; then
         echo "[ERROR] Downloaded file is not a valid .run executable. Check the ZED SDK URL for Jetson L4T version."
         exit 1
     fi

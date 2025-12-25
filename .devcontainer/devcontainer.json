@@ -13,7 +13,7 @@
       "cuda_version": "12.8",
       "target_platform": "desktop",
       "ubuntu_release_year": "22",
-      "l4t_version": "35.3.1"
+      "l4t_version": "35.4"
     }
   },
   "service": "dev",
