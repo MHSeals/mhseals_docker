@@ -29,37 +29,61 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     yay -S --noconfirm docker xorg-xwayland python-hjson nvidia-container-toolkit curl wget git gnupg
 
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
+    export DEBIAN_FRONTEND=noninteractive
     echo "Debian-based distro installation running..."
 
     echo "Removing incompatible packages..."
     for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
-        sudo apt-get remove -y $pkg || true
+        sudo apt-get purge -y $pkg || true
     done
-    
-    echo "Installing needed setup tools..."
-    sudo apt-get update 
-    sudo apt-get install -y gnupg wget curl 
+    sudo apt-get autoremove -y
 
-    # Docker repo setup
-    DOCKER_REPO="https://download.docker.com/linux/${ID}"
+    echo "Installing base tools..."
+    sudo apt-get update
+    sudo apt-get install -y ca-certificates curl gnupg wget lsb-release python3-pip git
+
+    # Determine Docker distro
+    if [[ "$ID" == "ubuntu" ]]; then
+        DOCKER_DISTRO=ubuntu
+    elif [[ "$ID" == "debian" ]]; then
+        DOCKER_DISTRO=debian
+    else
+        echo "Unsupported Docker distro: $ID"
+        exit 1
+    fi
+
+    # Docker GPG key
     sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL "$DOCKER_REPO/gpg" | sudo gpg --dearmor -o /etc/apt/keyrings/docker.asc
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $DOCKER_REPO \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    curl -fsSL https://download.docker.com/linux/$DOCKER_DISTRO/gpg \
+        | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+
+    # Docker repo
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+        https://download.docker.com/linux/$DOCKER_DISTRO \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https python3-pip git
-    pip install hjson
+    sudo apt-get install -y \
+        docker-ce docker-ce-cli containerd.io \
+        docker-buildx-plugin docker-compose-plugin \
+        xwayland apt-transport-https software-properties-common
 
-    # NVIDIA container toolkit
-    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-    curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-        sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-        sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-    sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+    pip3 install --no-input hjson
 
+    # NVIDIA toolkit (optional)
+    if lspci | grep -qi nvidia || [ -e /proc/driver/nvidia ]; then
+        echo "Installing NVIDIA container toolkit..."
+        curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
+            | sudo gpg --dearmor --yes -o /usr/share/keyrings/nvidia-container-toolkit.gpg
+        curl -fsSL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list \
+            | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit.gpg] https://#g' \
+            | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+        sudo apt-get update
+        sudo apt-get install -y nvidia-container-toolkit
+    else
+        echo "No NVIDIA GPU detected, skipping NVIDIA toolkit."
+    fi
 else
     echo "Unsupported distro: $ID"
     exit 1
