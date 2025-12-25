@@ -53,6 +53,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     fi
 
     # Docker GPG key
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7EA0A9C3F273FCD8
     sudo mkdir -p /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/$DOCKER_DISTRO/gpg \
         | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
@@ -63,8 +64,6 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-    sudo chmod 755 /etc/apt/keyrings
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     sudo apt-get update
     sudo apt-get install -y \
@@ -111,5 +110,8 @@ nvm use --lts
 # Install devcontainers CLI
 echo "Installing devcontainers CLI..."
 npm install -g @devcontainers/cli
+
+echo "Running prebuild script..."
+bash .devcontainer/prebuild.sh
 
 echo "Headless setup completed!"
