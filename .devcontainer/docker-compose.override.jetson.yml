@@ -8,11 +8,6 @@ services:
     volumes: []
     deploy: {}
     runtime: nvidia
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: []
   sitl:
     image: lunarzdev/mhseals-dev:jetson
     environment:
