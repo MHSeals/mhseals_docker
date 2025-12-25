@@ -6,7 +6,6 @@ services:
       NVIDIA_VISIBLE_DEVICES: ""
       NVIDIA_DRIVER_CAPABILITIES: ""
     volumes: []
-    deploy: {}
     runtime: nvidia
   sitl:
     image: lunarzdev/mhseals-dev:jetson
