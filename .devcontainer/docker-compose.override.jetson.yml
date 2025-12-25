@@ -1,12 +1,20 @@
 services:
   dev:
+    image: lunarzdev/mhseals-dev:jetson
     environment:
       DISPLAY: ""
       NVIDIA_VISIBLE_DEVICES: ""
       NVIDIA_DRIVER_CAPABILITIES: ""
     volumes: []
     deploy: {}
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: []
   sitl:
+    image: lunarzdev/mhseals-dev:jetson
     environment:
       DISPLAY: ""
     volumes:
