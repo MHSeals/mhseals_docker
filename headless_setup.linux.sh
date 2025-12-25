@@ -64,7 +64,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
         sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo chmod 755 /etc/apt/keyrings
-    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     sudo apt-get update
     sudo apt-get install -y \
