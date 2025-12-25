@@ -26,7 +26,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     done
 
     echo "Installing required packages..."
-    yay -S --noconfirm docker xorg-xwayland python-hjson nvidia-container-toolkit curl wget git
+    yay -S --noconfirm docker xorg-xwayland python-hjson nvidia-container-toolkit curl wget git gnupg
 
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
     echo "Debian-based distro installation running..."
@@ -35,6 +35,10 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
         sudo apt-get remove -y $pkg || true
     done
+    
+    echo "Installing needed setup tools..."
+    sudo apt-get update 
+    sudo apt-get install gnupg wget curl 
 
     # Docker repo setup
     DOCKER_REPO="https://download.docker.com/linux/${ID}"
@@ -46,7 +50,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl python3-pip git
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https python3-pip git
     pip install hjson
 
     # NVIDIA container toolkit
