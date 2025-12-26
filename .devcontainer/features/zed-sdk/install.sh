@@ -1,34 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[INFO] Detecting platform and GPU..."
+echo "[INFO] Installing dependencies for ZED SDK on $TARGET_PLATFORM..."
 
-GPU_AVAILABLE=false
-TARGET_PLATFORM="unknown"
-ARCH=$(uname -m)
-
-if [ "$ARCH" = "aarch64" ] && [ -d "/usr/lib/aarch64-linux-gnu/tegra" ]; then
-    TARGET_PLATFORM="jetson"
-    GPU_AVAILABLE=true
-    echo "[INFO] Jetson detected (ARM 64-bit)"
-elif [ "$ARCH" = "x86_64" ]; then
-    if command -v nvidia-smi &>/dev/null; then
-        TARGET_PLATFORM="desktop"
-        GPU_AVAILABLE=true
-        echo "[INFO] Desktop with NVIDIA GPU detected"
-    else
-        TARGET_PLATFORM="linux"
-        echo "[WARNING] x86_64 desktop without NVIDIA GPU detected. ZED SDK will be skipped."
-    fi
-else
-    echo "[WARNING] Unsupported architecture: $ARCH. Skipping GPU-dependent steps."
-fi
-
-echo "[INFO] TARGET_PLATFORM set to '$TARGET_PLATFORM'"
-
-if [ "$GPU_AVAILABLE" = true ] || [ "$TARGET_PLATFORM" = "jetson" ]; then
-    echo "[INFO] Installing dependencies for ZED SDK on $TARGET_PLATFORM..."
-
+if [[ "$TARGET_PLATFORM" == "desktop" || "$TARGET_PLATFORM" == "jetson" ]]; then
     echo "[INFO] Setting NVIDIA env vars..."
     cat <<'EOF' > /etc/profile.d/nvidia.sh
 export NVIDIA_DRIVER_CAPABILITIES=all
@@ -51,14 +26,16 @@ EOF
         echo "[INFO] Downloading ZED SDK for desktop from $ZED_URL ..."
         wget -q -O "$ZED_RUN_FILE" "$ZED_URL"
 
-        if file "$ZED_RUN_FILE" | grep -q 'executable'; then
-            chmod +x "$ZED_RUN_FILE"
-            echo "[INFO] Installing ZED SDK..."
-            ./"$ZED_RUN_FILE" silent
-            ln -sf /lib/x86_64-linux-gnu/libusb-1.0.so.0 /usr/lib/x86_64-linux-gnu/libusb-1.0.so || true
-        else
-            echo "[WARNING] Downloaded ZED SDK run file is invalid. Skipping installation."
+        if ! file "$ZED_RUN_FILE" | grep -q 'executable'; then
+            echo "[ERROR] Downloaded file is not a valid .run executable. Check the ZED SDK URL for your version."
+            exit 1
         fi
+
+        chmod +x "$ZED_RUN_FILE"
+        echo "[INFO] Installing ZED SDK..."
+        ./"$ZED_RUN_FILE" silent
+
+        ln -sf /lib/x86_64-linux-gnu/libusb-1.0.so.0 /usr/lib/x86_64-linux-gnu/libusb-1.0.so || true
 
     elif [ "$TARGET_PLATFORM" = "jetson" ]; then
         RELEASE=${RELEASE:-r36.2}
@@ -101,28 +78,35 @@ EOF
         L4T_MAJOR=$(echo "$L4T_VERSION" | cut -d. -f1)
         L4T_MINOR=$(echo "$L4T_VERSION" | cut -d. -f2)
 
+        apt-get update -y
+        apt-get install -y --no-install-recommends \
+            lsb-release wget less udev zstd sudo apt-transport-https build-essential cmake
+
         ZED_RUN_FILE="ZED_SDK_Linux.run"
         ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/l4t${L4T_MAJOR}.${L4T_MINOR}/jetsons"
 
         echo "[INFO] Downloading ZED SDK for Jetson L4T $L4T_VERSION from $ZED_URL ..."
         wget -q -O "$ZED_RUN_FILE" "$ZED_URL"
 
-        if file "$ZED_RUN_FILE" | grep -q 'executable'; then
-            chmod +x "$ZED_RUN_FILE"
-            echo "[INFO] Installing ZED SDK..."
-            ./"$ZED_RUN_FILE" silent skip_tools skip_drivers
-            rm -rf /usr/local/zed/resources/*
-            ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so || true
-        else
-            echo "[WARNING] Downloaded ZED SDK run file is invalid. Skipping installation."
+        if ! file "$ZED_RUN_FILE" | grep -q 'ELF'; then
+            echo "[ERROR] Downloaded file is not a valid .run executable. Check the ZED SDK URL for Jetson L4T version."
+            exit 1
         fi
+
+        chmod +x "$ZED_RUN_FILE"
+        echo "[INFO] Installing ZED SDK..."
+        ./"$ZED_RUN_FILE" silent skip_tools skip_drivers
+
+        rm -rf /usr/local/zed/resources/*
+        ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so || true
     fi
 
     echo "[INFO] Fixing permissions..."
-    chmod -R a+rX /usr/local/zed || true
-    chmod -R a+rX /workspace/venv/lib || true
-    
+    chmod -R a+rX /usr/local/zed
+    chmod -R a+rX /workspace/venv/lib
+
     echo "[INFO] Setting environment variables..."
+
     BASHRC="$HOME/.bashrc"
     if ! grep -q 'ZED_DIR=/usr/local/zed' "$BASHRC"; then
         echo "" >> "$BASHRC"
@@ -134,11 +118,11 @@ EOF
         echo "export PYTHONPATH=/workspace/venv/lib/python3.10/site-packages:\$PYTHONPATH" >> "$BASHRC"
         echo "[INFO] Environment variables appended to $BASHRC"
     fi
-    
-    rm -rf "$ZED_RUN_FILE" /var/lib/apt/lists/* || true
-    mkdir -p ~/Documents/ZED/
-else
-    echo "[INFO] No compatible GPU detected. Skipping ZED SDK installation."
-fi
 
-echo "[INFO] ZED SDK installation complete (GPU steps skipped if unavailable)"
+    rm -rf "$ZED_RUN_FILE" /var/lib/apt/lists/*
+    mkdir -p ~/Documents/ZED/
+
+    echo "[INFO] ZED SDK installation complete on $TARGET_PLATFORM"
+else
+    echo "[INFO] $TARGET_PLATFORM not supported, skipping installation" 
+fi

@@ -4,6 +4,11 @@
   "name": "ZED SDK Installer",
   "description": "Installs Stereolabs ZED SDK for Ubuntu 22.04 (x86_64) or Jetson (L4T)",
   "options": {
+    "target_platform": {
+      "type": "string",
+      "default": "desktop",
+      "description": "Platform to install ZED SDK on"
+    },
     "zed_sdk_version": {
       "type": "string",
       "default": "5.1",
