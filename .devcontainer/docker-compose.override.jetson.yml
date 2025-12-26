@@ -4,6 +4,7 @@ services:
       args:
         TARGET_PLATFORM: jetson
     image: lunarzdev/mhseals-dev:jetson
+    runtime: nvidia
     environment:
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
