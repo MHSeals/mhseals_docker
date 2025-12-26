@@ -1,13 +1,13 @@
 services:
   dev:
+    build:
+      args:
+        TARGET_PLATFORM: jetson
     image: lunarzdev/mhseals-dev:jetson
     environment:
-      DISPLAY: ""
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
   sitl:
     image: lunarzdev/mhseals-dev:jetson
-    environment:
-      DISPLAY: ""
     volumes:
       - ./boat.param:/param/boat.param:ro

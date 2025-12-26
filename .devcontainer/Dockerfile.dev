@@ -2,6 +2,10 @@ FROM ros:humble
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
+ARG TARGET_PLATFORM
+
+ENV USER=${USERNAME}
+ENV TARGET_PLATFORM=${TARGET_PLATFORM}
 
 # Delete user if it exists in container
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi

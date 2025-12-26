@@ -1,7 +1,16 @@
 services:
   dev:
+    image: lunarzdev/mhseals-dev:nvidia
+    build:
+      args:
+        TARGET_PLATFORM: nvidia
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
     deploy:
       resources:
         reservations:
           devices:
             - capabilities: [gpu]
+  sitl:
+    image: lunarzdev/mhseals-dev:nvidia

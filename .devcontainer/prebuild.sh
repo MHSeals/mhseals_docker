@@ -24,7 +24,7 @@ fi
 if [ "$OS_TYPE" = "linux" ]; then
     if command -v nvidia-smi &>/dev/null; then
         echo "[INFO] NVIDIA GPU detected, using NVIDIA override"
-        OS_TYPE="linux-nvidia"
+        OS_TYPE="nvidia"
     else
         echo "[INFO] No NVIDIA GPU detected, using standard Linux override"
     fi

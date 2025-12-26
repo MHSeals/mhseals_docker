@@ -1,6 +1,9 @@
 services:
   dev:
     image: lunarzdev/mhseals-sitl:mac
+    build:
+      args:
+        TARGET_PLATFORM: mac
     environment:
       DISPLAY: host.docker.internal:0
     volumes: []

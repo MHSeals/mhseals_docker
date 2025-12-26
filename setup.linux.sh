@@ -25,7 +25,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     for pkg in docker.io docker-doc podman-docker containerd runc; do yay -Rns $pkg; done
 
     echo "Installing all required packages..."
-    yay -S --noconfirm docker xorg-xwayland visual-studio-code-bin python-hjson nvidia-container-toolkit
+    yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson nvidia-container-toolkit
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
     echo "Debian-based distro installation running..."
 

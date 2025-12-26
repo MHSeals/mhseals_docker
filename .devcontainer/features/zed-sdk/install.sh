@@ -3,15 +3,8 @@ set -euo pipefail
 
 echo "[INFO] Installing dependencies for ZED SDK on $TARGET_PLATFORM..."
 
-if [[ "$TARGET_PLATFORM" == "desktop" || "$TARGET_PLATFORM" == "jetson" ]]; then
-    echo "[INFO] Setting NVIDIA env vars..."
-    cat <<'EOF' > /etc/profile.d/nvidia.sh
-export NVIDIA_DRIVER_CAPABILITIES=all
-export NVIDIA_VISIBLE_DEVICES=all
-EOF
-    chmod +x /etc/profile.d/nvidia.sh
-
-    if [ "$TARGET_PLATFORM" = "desktop" ]; then
+if [[ "$TARGET_PLATFORM" == "nvidia" || "$TARGET_PLATFORM" == "jetson" ]]; then
+    if [ "$TARGET_PLATFORM" = "nvidia" ]; then
         apt-get update -y
         apt-get install -y --no-install-recommends \
             lsb-release wget less udev zstd sudo build-essential cmake \

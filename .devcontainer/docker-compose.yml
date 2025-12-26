@@ -9,6 +9,7 @@ services:
         USERNAME: roboboat
         USER_UID: ${UID-1000}
         USER_GID: ${GID-1000}
+        TARGET_PLATFORM: linux
     container_name: roboboat_dev
     privileged: true
     network_mode: "host"
