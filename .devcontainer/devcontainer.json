@@ -11,7 +11,6 @@
     "./features/zed-sdk": {
       "zed_sdk_version": "5.1",
       "cuda_version": "12.8",
-      "target_platform": "desktop",
       "ubuntu_release_year": "22",
       "l4t_version": "35.4"
     }

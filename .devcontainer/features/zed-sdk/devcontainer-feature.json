@@ -19,12 +19,6 @@
       "default": "22",
       "description": "Ubuntu version release year"
     },
-    "target_platform": {
-      "type": "string",
-      "enum": ["desktop", "jetson"],
-      "default": "desktop",
-      "description": "Target platform: desktop (x86_64) or jetson (L4T)"
-    },
     "l4t_version": {
       "type": "string",
       "default": "35.4",

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Get the directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OS_TYPE="unknown"
 
 # Detect OS
-if [ -n "$WSL_DISTRO_NAME" ]; then
+if [ -n "${WSL_DISTRO_NAME:-}" ]; then
     OS_TYPE="wsl"
 elif [ "$(uname -s)" = "Darwin" ]; then
     OS_TYPE="mac"
@@ -19,5 +20,22 @@ else
     exit 1
 fi
 
-# Copy the appropriate override file relative to the script
-cp "${SCRIPT_DIR}/docker-compose.override.${OS_TYPE}.yml" "${SCRIPT_DIR}/docker-compose.override.yml"
+# Detect NVIDIA GPU for Linux desktop
+if [ "$OS_TYPE" = "linux" ]; then
+    if command -v nvidia-smi &>/dev/null; then
+        echo "[INFO] NVIDIA GPU detected, using NVIDIA override"
+        OS_TYPE="linux-nvidia"
+    else
+        echo "[INFO] No NVIDIA GPU detected, using standard Linux override"
+    fi
+fi
+
+OVERRIDE_FILE="${SCRIPT_DIR}/docker-compose.override.${OS_TYPE}.yml"
+
+if [ ! -f "$OVERRIDE_FILE" ]; then
+    echo "[ERROR] Override file not found: $OVERRIDE_FILE"
+    exit 1
+fi
+
+cp "$OVERRIDE_FILE" "${SCRIPT_DIR}/docker-compose.override.yml"
+echo "[INFO] Applied override: $OVERRIDE_FILE"
