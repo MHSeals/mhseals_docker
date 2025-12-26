@@ -59,8 +59,6 @@ EOF
         echo "[INFO] Adding NVIDIA Jetson apt repository and public key..."
         wget -qO - https://repo.download.nvidia.com/jetson/jetson-ota-public.asc | apt-key add -
         echo "deb https://repo.download.nvidia.com/jetson/common $RELEASE main" >> /etc/apt/sources.list
-        cp /etc/jetson-ota-public.key /tmp/
-        apt-key add /tmp/jetson-ota-public.key
 
         echo "[INFO] Installing Jetson dependencies..."
         DEBIAN_FRONTEND=noninteractive apt-get update -y
