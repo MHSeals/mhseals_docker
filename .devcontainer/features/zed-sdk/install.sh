@@ -38,8 +38,6 @@ EOF
         ln -sf /lib/x86_64-linux-gnu/libusb-1.0.so.0 /usr/lib/x86_64-linux-gnu/libusb-1.0.so || true
 
     elif [ "$TARGET_PLATFORM" = "jetson" ]; then
-        RELEASE=${RELEASE:-r36.2}
-
         echo "[INFO] Setting up EGL/GLVND configuration..."
         mkdir -p /usr/share/egl/egl_external_platform.d/
         echo '{ "file_format_version" : "1.0.0", "ICD" : { "library_path" : "libnvidia-egl-wayland.so.1" }}' \
@@ -58,7 +56,7 @@ EOF
 
         echo "[INFO] Adding NVIDIA Jetson apt repository and public key..."
         wget -qO - https://repo.download.nvidia.com/jetson/jetson-ota-public.asc | apt-key add -
-        echo "deb https://repo.download.nvidia.com/jetson/common $RELEASE main" >> /etc/apt/sources.list
+        echo "deb https://repo.download.nvidia.com/jetson/common r$L4T_VERSION main" >> /etc/apt/sources.list
 
         echo "[INFO] Installing Jetson dependencies..."
         DEBIAN_FRONTEND=noninteractive apt-get update -y
@@ -74,20 +72,17 @@ EOF
             sox udev vulkan-tools wget wireless-tools wpasupplicant \
             lsb-release wget less zstd sudo apt-transport-https build-essential cmake
 
-        L4T_MAJOR=$(echo "$L4T_VERSION" | cut -d. -f1)
-        L4T_MINOR=$(echo "$L4T_VERSION" | cut -d. -f2)
-
         apt-get update -y
         apt-get install -y --no-install-recommends \
             lsb-release wget less udev zstd sudo apt-transport-https build-essential cmake
 
         ZED_RUN_FILE="ZED_SDK_Linux.run"
-        ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/l4t${L4T_MAJOR}.${L4T_MINOR}/jetsons"
+        ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/l4t${L4T_VERSION}/jetsons"
 
         echo "[INFO] Downloading ZED SDK for Jetson L4T $L4T_VERSION from $ZED_URL ..."
         wget -q -O "$ZED_RUN_FILE" "$ZED_URL"
 
-        if ! file "$ZED_RUN_FILE" | grep -q 'ELF'; then
+        if ! file "$ZED_RUN_FILE" | grep -q 'executable'; then
             echo "[ERROR] Downloaded file is not a valid .run executable. Check the ZED SDK URL for Jetson L4T version."
             exit 1
         fi
