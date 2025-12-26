@@ -117,27 +117,28 @@ EOF
             echo "[WARNING] Downloaded ZED SDK run file is invalid. Skipping installation."
         fi
     fi
+
+    echo "[INFO] Fixing permissions..."
+    chmod -R a+rX /usr/local/zed || true
+    chmod -R a+rX /workspace/venv/lib || true
+    
+    echo "[INFO] Setting environment variables..."
+    BASHRC="$HOME/.bashrc"
+    if ! grep -q 'ZED_DIR=/usr/local/zed' "$BASHRC"; then
+        echo "" >> "$BASHRC"
+        echo "# ZED SDK environment variables" >> "$BASHRC"
+        echo "export ZED_DIR=/usr/local/zed" >> "$BASHRC"
+        echo "export CMAKE_PREFIX_PATH=/usr/local/zed:\$CMAKE_PREFIX_PATH" >> "$BASHRC"
+        echo "export PATH=/workspace/venv/bin:\$PATH" >> "$BASHRC"
+        echo "export LD_LIBRARY_PATH=/usr/local/zed/lib:\$LD_LIBRARY_PATH" >> "$BASHRC"
+        echo "export PYTHONPATH=/workspace/venv/lib/python3.10/site-packages:\$PYTHONPATH" >> "$BASHRC"
+        echo "[INFO] Environment variables appended to $BASHRC"
+    fi
+    
+    rm -rf "$ZED_RUN_FILE" /var/lib/apt/lists/* || true
+    mkdir -p ~/Documents/ZED/
 else
     echo "[INFO] No compatible GPU detected. Skipping ZED SDK installation."
 fi
 
-echo "[INFO] Fixing permissions..."
-chmod -R a+rX /usr/local/zed || true
-chmod -R a+rX /workspace/venv/lib || true
-
-echo "[INFO] Setting environment variables..."
-BASHRC="$HOME/.bashrc"
-if ! grep -q 'ZED_DIR=/usr/local/zed' "$BASHRC"; then
-    echo "" >> "$BASHRC"
-    echo "# ZED SDK environment variables" >> "$BASHRC"
-    echo "export ZED_DIR=/usr/local/zed" >> "$BASHRC"
-    echo "export CMAKE_PREFIX_PATH=/usr/local/zed:\$CMAKE_PREFIX_PATH" >> "$BASHRC"
-    echo "export PATH=/workspace/venv/bin:\$PATH" >> "$BASHRC"
-    echo "export LD_LIBRARY_PATH=/usr/local/zed/lib:\$LD_LIBRARY_PATH" >> "$BASHRC"
-    echo "export PYTHONPATH=/workspace/venv/lib/python3.10/site-packages:\$PYTHONPATH" >> "$BASHRC"
-    echo "[INFO] Environment variables appended to $BASHRC"
-fi
-
-rm -rf "$ZED_RUN_FILE" /var/lib/apt/lists/* || true
-mkdir -p ~/Documents/ZED/
 echo "[INFO] ZED SDK installation complete (GPU steps skipped if unavailable)"
