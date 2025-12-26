@@ -13,7 +13,9 @@ services:
     volumes:
       - /usr/local/cuda:/usr/local/cuda:ro
       - /usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu:ro
+      - /usr/lib/tegra:/usr/lib/tegra:ro
       - /usr/include:/usr/include:ro
+      - /usr/lib/firmware:/usr/lib/firmware:ro
   sitl:
     image: lunarzdev/mhseals-dev:jetson
     volumes:

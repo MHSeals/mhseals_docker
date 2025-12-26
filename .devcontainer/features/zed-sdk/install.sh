@@ -86,25 +86,6 @@ if [[ "$TARGET_PLATFORM" == "nvidia" || "$TARGET_PLATFORM" == "jetson" ]]; then
 
         rm -rf /usr/local/zed/resources/*
         ln -sf /usr/lib/aarch64-linux-gnu/tegra/libv4l2.so.0 /usr/lib/aarch64-linux-gnu/libv4l2.so || true
-
-        echo "[INFO] Installing Jetson CUDA dev packages..."
-        
-        # Add NVIDIA repo (Jetson-specific)
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends \
-            cuda-toolkit-12-6 \
-            libnvinfer8 \
-            libnvinfer-plugin8 \
-            libnvonnxparsers8 \
-            libnvparsers8 \
-            libnvinfer-bin \
-            libnvinfer-dev \
-            libcudnn8-dev \
-            libcudnn8
-
-        export CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda
-        export PATH=$CUDA_TOOLKIT_ROOT_DIR/bin:$PATH
-        export LD_LIBRARY_PATH=$CUDA_TOOLKIT_ROOT_DIR/lib64:$LD_LIBRARY_PATH
     fi
 
     echo "[INFO] Fixing permissions..."
