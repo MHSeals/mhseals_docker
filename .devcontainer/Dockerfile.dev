@@ -1,6 +1,5 @@
 ARG BASE_IMAGE=ros:humble
 FROM $BASE_IMAGE
-
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
@@ -37,11 +36,13 @@ WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
 COPY package-ignore.txt .
-COPY apt-mark.txt .
+COPY package-remove.txt .
+
+# Remove packages listed in package-remove.txt
+RUN xargs apt-get remove -y < package-remove.txt || true
 
 # Install all apt packages
-RUN xargs apt-mark hold < apt-mark.txt \
-    && apt-get update && apt-get upgrade -y \
+RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \

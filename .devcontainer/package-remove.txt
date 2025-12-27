@@ -18,3 +18,4 @@ libopencv-videostab-dev
 libopencv-contrib-dev
 libopencv-dev
 python3-opencv
+opencv-licenses
