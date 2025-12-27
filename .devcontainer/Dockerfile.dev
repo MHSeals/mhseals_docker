@@ -38,14 +38,8 @@ COPY requirements.txt .
 COPY apt-packages.txt .
 COPY package-ignore.txt .
 
-# Installation dependencies
-RUN apt-get update \ 
-    && apt-get upgrade -y \
-    && apt-get install -y \
-    python3-pip python3-venv build-essential
-
-# Install all apt packages
-RUN apt-get update && apt-get upgrade -y \
+# Install dependencies
+RUN apt-get update && apt-get upgrade -y && apt-get install -y python3-pip python3-venv build-essential \
     && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y -o Dpkg::Options::="--force-overwrite" install --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -59,6 +53,7 @@ RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 ENV PATH=/workspace/venv/bin:$PATH
 
+# Startup setup
 ENV SHELL=/bin/bash
 USER $USERNAME
 CMD ["/bin/bash"]
