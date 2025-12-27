@@ -1,12 +1,10 @@
 ARG BASE_IMAGE=ros:humble
 FROM $BASE_IMAGE
+
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
 ARG TARGET_PLATFORM
-ARG PIP_INDEX_URL=https://pypi.org/simple
-ARG PIP_EXTRA_INDEX_URL=""
-
 ENV USER=${USERNAME}
 ENV TARGET_PLATFORM=${TARGET_PLATFORM}
 
@@ -35,14 +33,12 @@ RUN groupadd --gid $USER_GID $USERNAME \
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
+COPY package-mark.txt .
 COPY package-ignore.txt .
-COPY package-remove.txt .
-
-# Remove packages listed in package-remove.txt
-RUN xargs apt-get remove -y < package-remove.txt || true
 
 # Install all apt packages
-RUN apt-get update && apt-get upgrade -y \
+RUN xargs apt-mark hold < package-mark.txt \
+    && apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \
@@ -54,18 +50,10 @@ RUN apt-get update && apt-get upgrade -y \
 # Virtualize and install Python packages
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
-    && if [ -n "$PIP_EXTRA_INDEX_URL" ]; then \
-         /workspace/venv/bin/pip install --no-cache-dir \
-           --index-url "$PIP_INDEX_URL" \
-           --extra-index-url "$PIP_EXTRA_INDEX_URL" \
-           -r requirements.txt; \
-       else \
-         /workspace/venv/bin/pip install --no-cache-dir \
-           --index-url "$PIP_INDEX_URL" \
-           -r requirements.txt; \
-       fi
+    && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL=/bin/bash
+
 USER $USERNAME
 CMD ["/bin/bash"]
