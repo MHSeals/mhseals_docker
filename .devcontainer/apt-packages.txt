@@ -13,16 +13,13 @@ ros-humble-slam-toolbox
 ros-humble-twist-mux
 ros-humble-xacro
 ros-humble-mavros
-ros-humble-cv-bridge
 ros-humble-rtabmap-ros
 ros-humble-velodyne-driver
 ros-humble-velodyne-pointcloud
-ros-humble-image-transport 
 ros-humble-tf2-ros
 ros-humble-robot-localization
 ros-humble-rqt-graph
 ros-humble-topic-tools
 ros-humble-zed-msgs
 ros-humble-nmea-msgs
-ros-humble-image-transport-plugins
 geographiclib-tools
