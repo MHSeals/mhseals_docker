@@ -29,20 +29,23 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+# Prepare installation and work environment
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
+COPY package-ignore.txt .
 
+# Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \
        build-essential \
-    && xargs apt-get install -y --no-install-recommends < apt-packages.txt \
+    && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y install --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Virtualize and install Python packages, placed in a lower layer to minimize rebuilds
+# Virtualize and install Python packages
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
