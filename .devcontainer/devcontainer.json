@@ -12,7 +12,7 @@
       "zed_sdk_version": "5.1",
       "cuda_version": "12.8",
       "ubuntu_release_year": "22",
-      "l4t_version": "36.4.0"
+      "l4t_version": "36.4"
     }
   },
   "service": "dev",
