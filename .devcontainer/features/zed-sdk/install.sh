@@ -8,7 +8,7 @@ if [[ "$TARGET_PLATFORM" == "nvidia" || "$TARGET_PLATFORM" == "jetson" ]]; then
     apt-get update -y
     apt-get install -y --no-install-recommends \
         lsb-release wget less udev zstd sudo build-essential cmake \
-        python3 python3-pip libpng-dev libgomp1
+        python3 python3-pip libpng-dev libgomp1 file
 
     python3 -m pip install --upgrade pip
     python3 -m pip install numpy opencv-python pyopengl
@@ -18,7 +18,6 @@ if [[ "$TARGET_PLATFORM" == "nvidia" || "$TARGET_PLATFORM" == "jetson" ]]; then
         ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/cu${CUDA_VERSION%%.*}/ubuntu${UBUNTU_RELEASE_YEAR}"
 
         echo "[INFO] Downloading ZED SDK for desktop from $ZED_URL ..."
-        wget -q -O "$ZED_RUN_FILE" "$ZED_URL"
     elif [ "$TARGET_PLATFORM" = "jetson" ]; then
         ZED_RUN_FILE="ZED_SDK_Linux.run"
         ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/l4t${L4T_VERSION}/jetsons"
