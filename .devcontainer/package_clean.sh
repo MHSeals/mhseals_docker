@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-
-apt-get remove --purge opencv-dev
+sudo dpkg --remove --force-remove-reinstreq opencv-dev
+sudo apt-get purge opencv-dev
+sudo apt-get autoremove
 apt-get autoremove
 rm -rf /usr/local/include/opencv4
 rm -rf /usr/local/lib/libopencv_*
