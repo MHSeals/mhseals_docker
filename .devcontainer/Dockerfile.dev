@@ -11,15 +11,21 @@ ENV TARGET_PLATFORM=${TARGET_PLATFORM}
 # Delete user if it exists in container
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
-# Ensure no expired keys
-RUN apt-get update || true \
- && apt-get install -y --no-install-recommends curl gnupg2 ca-certificates \
- && curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
-    | gpg --batch --yes --no-tty --dearmor \
-      -o /usr/share/keyrings/ros-archive-keyring.gpg \
- && echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] \
-    http://packages.ros.org/ros2/ubuntu jammy main" \
-    > /etc/apt/sources.list.d/ros2.list
+# Ensure ROS package list available
+RUN set -eux; \
+    apt-get update -y && apt-get install -y --no-install-recommends \
+        curl gnupg2 ca-certificates sudo
+
+# Ensure ROS package list available
+RUN set -eux; \
+    if ! apt-get update -y; then \
+        rm -f /etc/apt/sources.list.d/ros2-latest.list /usr/share/keyrings/ros-archive-keyring.gpg; \
+        curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+            | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg; \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" \
+            > /etc/apt/sources.list.d/ros2.list; \
+        apt-get update -y; \
+    fi
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
@@ -38,9 +44,9 @@ COPY package-ignore.txt .
 # Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
-       python3-pip \
-       python3-venv \
-       build-essential \
+        python3-pip \
+        python3-venv \
+        build-essential \
     && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y -o Dpkg::Options::="--force-overwrite" install --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
