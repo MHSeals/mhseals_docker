@@ -33,12 +33,13 @@ RUN groupadd --gid $USER_GID $USERNAME \
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
-COPY package-mark.txt .
 COPY package-ignore.txt .
+COPY package_clean.sh .
+
+RUN ./package_clean.sh
 
 # Install all apt packages
-RUN xargs apt-mark hold < package-mark.txt \
-    && apt-get update && apt-get upgrade -y \
+RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
        python3-pip \
        python3-venv \
