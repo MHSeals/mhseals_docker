@@ -34,7 +34,6 @@ WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
 COPY package-ignore.txt .
-COPY pip.conf /etc/pip.conf
 
 # Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
@@ -47,12 +46,14 @@ RUN apt-get update && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Virtualize and install Python packages
+COPY pip.conf /etc/pip.conf
+ENV PIP_INDEX_URL=""
+ENV PIP_EXTRA_INDEX_URL=""
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
     && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
-
 ENV PATH=/workspace/venv/bin:$PATH
-ENV SHELL=/bin/bash
 
+ENV SHELL=/bin/bash
 USER $USERNAME
 CMD ["/bin/bash"]
