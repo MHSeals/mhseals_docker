@@ -73,7 +73,6 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
 
     pip3 install --no-input hjson
 
-    # NVIDIA toolkit (optional)
     if lspci | grep -qi nvidia || [ -e /proc/driver/nvidia ]; then
         echo "Installing NVIDIA container toolkit..."
         curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey \
@@ -85,6 +84,11 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
         sudo apt-get install -y nvidia-container-toolkit
     else
         echo "No NVIDIA GPU detected, skipping NVIDIA toolkit."
+    fi
+
+    if [ "$(uname -m)" = "aarch64" ]; then
+        echo "Installing Jetpack for Jetson..."
+        sudo apt-get install nvidia-jetpack
     fi
 else
     echo "Unsupported distro: $ID"

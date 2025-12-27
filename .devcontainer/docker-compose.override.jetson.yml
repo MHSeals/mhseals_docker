@@ -4,18 +4,11 @@ services:
     build:
       args:
         TARGET_PLATFORM: jetson
+        BASE_IMAGE: dustynv/ros:humble-desktop-l4t-r36.4.0
     runtime: nvidia
     environment:
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
-      CUDA_TOOLKIT_ROOT_DIR: /usr/local/cuda
-      LD_LIBRARY_PATH: /usr/local/cuda/lib64:$LD_LIBRARY_PATH
-    volumes:
-      - /usr/local/cuda:/usr/local/cuda:ro
-      - /usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu:ro
-      - /usr/lib/tegra:/usr/lib/tegra:ro
-      - /usr/include:/usr/include:ro
-      - /usr/lib/firmware:/usr/lib/firmware:ro
   sitl:
     image: lunarzdev/mhseals-dev:jetson
     volumes:
