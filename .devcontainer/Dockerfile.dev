@@ -11,9 +11,8 @@ ENV TARGET_PLATFORM=${TARGET_PLATFORM}
 # Delete user if it exists in container
 RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 
-# Ensure ROS package list available
-RUN set -eux; \
-    apt-get update -y && apt-get install -y --no-install-recommends \
+# Needed setup dependencies (no update to fix base source lists)
+RUN apt-get install -y --no-install-recommends \
         curl gnupg2 ca-certificates sudo
 
 # Ensure ROS package list available
@@ -30,8 +29,6 @@ RUN set -eux; \
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && apt-get update \
-    && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
@@ -41,12 +38,14 @@ COPY requirements.txt .
 COPY apt-packages.txt .
 COPY package-ignore.txt .
 
+# Installation dependencies
+RUN apt-get update \ 
+    && apt-get upgrade -y \
+    && apt-get install \
+    python3-pip python3-venv build-essential
+
 # Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
-    && apt-get install -y \
-        python3-pip \
-        python3-venv \
-        build-essential \
     && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y -o Dpkg::Options::="--force-overwrite" install --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
