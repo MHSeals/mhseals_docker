@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=ros:humble
 FROM $BASE_IMAGE
 
 ARG USERNAME
@@ -14,8 +14,9 @@ RUN if id -u $USER_UID ; then userdel `id -un $USER_UID` ; fi
 # Ensure no expired keys
 RUN apt-get update || true \
  && apt-get install -y --no-install-recommends curl gnupg2 ca-certificates \
- && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
-    | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg \
+ && curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+    | gpg --batch --yes --no-tty --dearmor \
+      -o /usr/share/keyrings/ros-archive-keyring.gpg \
  && echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] \
     http://packages.ros.org/ros2/ubuntu jammy main" \
     > /etc/apt/sources.list.d/ros2.list
@@ -37,7 +38,7 @@ RUN apt-get update && apt-get upgrade -y \
        python3-pip \
        python3-venv \
        build-essential \
-    && xargs sudo apt-get -y install < apt-packages.txt \
+    && xargs apt-get -y install < apt-packages.txt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
