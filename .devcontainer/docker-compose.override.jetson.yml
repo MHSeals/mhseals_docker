@@ -5,7 +5,6 @@ services:
       args:
         TARGET_PLATFORM: jetson
         BASE_IMAGE: dustynv/ros:humble-desktop-l4t-r36.4.0
-        PIP_EXTRA_INDEX_URL: http://jetson.webredirect.org/jp6/cu126
     runtime: nvidia
     environment:
       NVIDIA_VISIBLE_DEVICES: all

@@ -34,9 +34,7 @@ WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
 COPY package-ignore.txt .
-COPY package_clean.sh .
-
-RUN chmod +x package_clean.sh && ./package_clean.sh
+COPY pip.conf /etc/pip.conf
 
 # Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
@@ -44,7 +42,7 @@ RUN apt-get update && apt-get upgrade -y \
        python3-pip \
        python3-venv \
        build-essential \
-    && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y install --no-install-recommends \
+    && grep -vFf package-ignore.txt apt-packages.txt | xargs apt-get -y -o Dpkg::Options::="--force-overwrite" install --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
