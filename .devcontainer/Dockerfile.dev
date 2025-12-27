@@ -5,6 +5,9 @@ ARG USERNAME
 ARG USER_UID
 ARG USER_GID
 ARG TARGET_PLATFORM
+ARG PIP_INDEX_URL=https://pypi.org/simple
+ARG PIP_EXTRA_INDEX_URL=""
+
 ENV USER=${USERNAME}
 ENV TARGET_PLATFORM=${TARGET_PLATFORM}
 
@@ -33,6 +36,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 WORKDIR /home/${USERNAME}/roboboat_ws
 COPY requirements.txt .
 COPY apt-packages.txt .
+COPY package-ignore.txt .
 COPY apt-mark.txt .
 
 # Install all apt packages
@@ -49,10 +53,18 @@ RUN xargs apt-mark hold < apt-mark.txt \
 # Virtualize and install Python packages
 RUN python3 -m venv --system-site-packages /workspace/venv \
     && /workspace/venv/bin/pip install --upgrade pip \
-    && /workspace/venv/bin/pip install --no-cache-dir -r requirements.txt
+    && if [ -n "$PIP_EXTRA_INDEX_URL" ]; then \
+         /workspace/venv/bin/pip install --no-cache-dir \
+           --index-url "$PIP_INDEX_URL" \
+           --extra-index-url "$PIP_EXTRA_INDEX_URL" \
+           -r requirements.txt; \
+       else \
+         /workspace/venv/bin/pip install --no-cache-dir \
+           --index-url "$PIP_INDEX_URL" \
+           -r requirements.txt; \
+       fi
 
 ENV PATH=/workspace/venv/bin:$PATH
 ENV SHELL=/bin/bash
-
 USER $USERNAME
 CMD ["/bin/bash"]

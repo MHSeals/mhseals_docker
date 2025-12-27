@@ -11,6 +11,7 @@ services:
         USER_GID: ${GID-1000}
         TARGET_PLATFORM: linux
         BASE_IMAGE: ros:humble
+        PIP_INDEX_URL: https://pypi.org/simple
     container_name: roboboat_dev
     privileged: true
     network_mode: "host"
