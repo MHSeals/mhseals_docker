@@ -36,7 +36,7 @@ COPY apt-packages.txt .
 COPY package-ignore.txt .
 COPY package_clean.sh .
 
-RUN ./package_clean.sh
+RUN chmod +x package_clean.sh && ./package_clean.sh
 
 # Install all apt packages
 RUN apt-get update && apt-get upgrade -y \
