@@ -15,3 +15,5 @@ services:
     image: lunarzdev/mhseals-dev:jetson
     volumes:
       - ./boat.param:/param/boat.param:ro
+volumes:
+  zed_resources:
