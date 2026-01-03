@@ -4,9 +4,12 @@ set -e
 VARIANT=${VARIANT:-garden}
 
 if [ "${VARIANT}" = "classic" ]; then
+  echo "[INFO] Installing Gazebo Classic..." 
   apt-get update && apt-get install -y \
     ros-humble-gazebo-ros-pkgs ros-humble-gazebo-ros2-control
 elif [ "${VARIANT}" = "garden" ]; then
+  echo "[INFO] Installing Gazebo Garden..." 
+
   # Get installation utilities
   apt-get update && apt-get install -y wget lsb-release gnupg
   wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/gazebo.gpg
@@ -38,4 +41,6 @@ elif [ "${VARIANT}" = "garden" ]; then
 
   echo "$USER_HOME/roboboat_ws/install/lib" | sudo tee /etc/ld.so.conf.d/roboboat_ws.conf
   sudo ldconfig
+else
+    echo "[INFO] None/unsupported version selected, skipping Gazebo installation installation..." 
 fi

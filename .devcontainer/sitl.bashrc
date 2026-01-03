@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-set -e
-
-cat << 'EOF' >> ~/.bashrc
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
@@ -14,6 +10,7 @@ export PATH=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:$PATH
 export PATH="/home/ardupilot/ardupilot/Tools/autotest:"$PATH
 export PATH=/usr/lib/ccache:$PATH
 cd /home/$USER/ardupilot
-EOF
 
-exec "$@"
+help () {
+    cat ~/.helper.txt
+}

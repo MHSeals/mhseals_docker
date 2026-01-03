@@ -16,12 +16,12 @@ if [[ "$TARGET_PLATFORM" == "nvidia" || "$TARGET_PLATFORM" == "jetson" ]]; then
     if [ "$TARGET_PLATFORM" = "nvidia" ]; then
         ZED_RUN_FILE="ZED_SDK_Linux_Ubuntu${UBUNTU_RELEASE_YEAR}.run"
         ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/cu${CUDA_VERSION%%.*}/ubuntu${UBUNTU_RELEASE_YEAR}"
-
         echo "[INFO] Downloading ZED SDK for desktop from $ZED_URL ..."
     elif [ "$TARGET_PLATFORM" = "jetson" ]; then
         ZED_RUN_FILE="ZED_SDK_Linux.run"
         ZED_URL="https://download.stereolabs.com/zedsdk/${ZED_SDK_VERSION}/l4t${L4T_VERSION}/jetsons"
         echo "[INFO] Downloading ZED SDK for Jetson L4T $L4T_VERSION from $ZED_URL ..."
+        apt-get install -y --no-install-recommends nvidia-cuda-toolkit 
     fi
 
     wget -q -O "$ZED_RUN_FILE" "$ZED_URL"

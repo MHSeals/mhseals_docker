@@ -45,6 +45,8 @@ RUN apt-get install locales \
 
 USER $USERNAME
 ENV SHELL=/bin/bash
-COPY sitl_entrypoint.sh /sitl_entrypoint.sh
-ENTRYPOINT ["/sitl_entrypoint.sh"]
+COPY sitl.entrypoint.sh /sitl.entrypoint.sh
+COPY sitl.bashrc /sitl.bashrc
+COPY sitl.helper.txt /sitl.helper.txt
+ENTRYPOINT ["/sitl.entrypoint.sh"]
 CMD ["sleep", "infinity"]

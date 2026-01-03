@@ -6,6 +6,8 @@ services:
         TARGET_PLATFORM: jetson
         BASE_IMAGE: dustynv/ros:humble-desktop-l4t-r36.4.0
     runtime: nvidia
+    volumes:
+      - zed_resources:/usr/local/zed/resources 
     environment:
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all

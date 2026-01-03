@@ -1,0 +1,21 @@
+
+--- Manual MAVROS Command ---
+ros2 launch mavros apm.launch fcu_url:=tcp://127.0.0.1:5762
+
+--- ROS Build Commands ---
+colcon build
+source install/setup.bash
+
+--- Manual ROS TCP Endpoint ---
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<ip> -p ROS_TCP_PORT:=<port>
+
+--- Launch Commands ---
+ros2 launch mhseals_nav sensors.launch.py
+ros2 launch mhseals_nav odom.launch.py
+ros2 launch mhseals_nav slam_nav.launch.py
+
+--- Complete Launch File ---
+ros2 launch mhseals_nav robot.launch.py
+
+--- ZED Camera Optimization ---
+sudo -E ZED_Diagnostic -aio
