@@ -63,7 +63,15 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     sudo apt-get update
 
     echo "Installing all required packages..."
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl jq python3-hjson
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl jq
+
+    if [ "$(uname -m)" = "aarch64" ]; then
+        GET=https://github.com/hjson/hjson-go/releases/download/v4.5.0/hjson_v4.5.0_linux_arm64.tar.gz
+    else
+        GET=https://github.com/hjson/hjson-go/releases/download/v4.5.0/hjson_v4.5.0_linux_amd64.tar.gz
+    fi
+
+    curl -sSL $GET | sudo tar -xz -C /usr/local/bin
 
     echo "Installing VSCode..."
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
