@@ -63,7 +63,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     sudo apt-get update
 
     echo "Installing all required packages..."
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl jq
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl jq python3-hjson
 
     echo "Installing VSCode..."
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
