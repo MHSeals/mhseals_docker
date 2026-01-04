@@ -27,7 +27,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     echo "Installing all required packages..."
     yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson
 
-    if [ "$(uname -m)" = "aarch64" ]; then
+    if [[ "$(uname -m)" = "aarch64" && ! -f /etc/rpi-issue ]]; then
         yay -S --noconfirm nvidia-container-toolkit
     fi
 elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; then
@@ -71,7 +71,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     sudo apt update
     sudo apt install code
 
-    if [ "$(uname -m)" = "aarch64" ]; then
+    if [[ "$(uname -m)" = "aarch64" && ! -f /etc/rpi-issue ]]; then
         echo "Installing NVIDIA container tools..."
         curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
         curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
