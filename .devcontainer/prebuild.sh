@@ -11,7 +11,11 @@ elif [ "$(uname -s)" = "Darwin" ]; then
     OS_TYPE="mac"
 elif [ "$(uname -s)" = "Linux" ]; then
     if [ "$(uname -m)" = "aarch64" ]; then
-        OS_TYPE="jetson"
+        if [ -f /etc/rpi-issue ]; then
+            OS_TYPE="rpi"
+        else
+            OS_TYPE="jetson"
+        fi
     else
         OS_TYPE="linux"
     fi
