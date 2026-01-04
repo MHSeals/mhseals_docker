@@ -25,7 +25,7 @@ if [[ "$ID" == "arch" || "$ID_LIKE" == *"arch"* ]]; then
     for pkg in docker.io docker-doc podman-docker containerd runc; do yay -Rns $pkg; done
 
     echo "Installing all required packages..."
-    yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson
+    yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson jq
 
     if [[ "$(uname -m)" = "aarch64" && ! -f /etc/rpi-issue ]]; then
         yay -S --noconfirm nvidia-container-toolkit
@@ -63,7 +63,7 @@ elif [[ "$ID" == "ubuntu" || "$ID" == "debian" || "$ID_LIKE" == *"debian"* ]]; t
     sudo apt-get update
 
     echo "Installing all required packages..."
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xwayland software-properties-common apt-transport-https wget curl jq
 
     echo "Installing VSCode..."
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
