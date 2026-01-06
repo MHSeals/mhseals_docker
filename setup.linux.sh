@@ -92,6 +92,36 @@ setup_gpu() {
             sudo apt-get update
             sudo apt-get install -y nvidia-container-toolkit
         fi
+    elif [[ "$OS_ID" == "fedora" || "$OS_LIKE" == *"rhel"* || "$OS_LIKE" == *"fedora"* ]]; then
+        sudo dnf install -y \
+            mesa-vulkan-drivers \
+            vulkan-tools \
+            mesa-dri-drivers \
+            mesa-libGL
+    
+        if $HAS_INTEL; then
+            sudo dnf install -y mesa-vulkan-drivers
+        fi
+
+        if $HAS_NVIDIA; then
+            if [[ "$OS_ID" == "fedora" ]]; then
+                sudo dnf install -y \
+                    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+                    https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+        
+                sudo dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda
+            else
+                sudo dnf install -y epel-release
+                sudo dnf config-manager --set-enabled crb || true
+        
+                sudo dnf install -y \
+                    https://developer.download.nvidia.com/compute/cuda/repos/rhel$(rpm -E %rhel)/x86_64/cuda-rhel$(rpm -E %rhel).repo
+        
+                sudo dnf install -y nvidia-driver
+            fi
+        
+            sudo dnf install -y nvidia-container-toolkit
+        fi
     fi
 }
 
@@ -122,7 +152,6 @@ setup_os() {
         done
 
         yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson jq
-
     elif [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_LIKE" == *"debian"* ]]; then
         echo "Debian/Ubuntu-based distro detected."
 
@@ -156,7 +185,35 @@ setup_os() {
         sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
         sudo apt update
         sudo apt install -y code
+    elif [[ "$OS_ID" == "fedora" || "$OS_LIKE" == *"rhel"* || "$OS_LIKE" == *"fedora"* ]]; then
+        echo "RPM-based distro detected."
 
+        sudo dnf install -y dnf-plugins-core curl wget jq git
+        sudo dnf remove -y podman podman-docker containerd runc || true
+
+        sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo || \
+        sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        
+        sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin xorg-x11-server-Xwayland
+
+        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        
+		cat <<-EOF | sudo tee /etc/yum.repos.d/vscode.repo
+		[code]
+		name=Visual Studio Code
+		baseurl=https://packages.microsoft.com/yumrepos/vscode
+		enabled=1
+		gpgcheck=1
+		gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+		EOF
+        sudo dnf install -y code
+
+        if [[ "$ARCH" = "aarch64" ]]; then
+            GET=https://github.com/hjson/hjson-go/releases/download/v4.5.0/hjson_v4.5.0_linux_arm64.tar.gz
+        else
+            GET=https://github.com/hjson/hjson-go/releases/download/v4.5.0/hjson_v4.5.0_linux_amd64.tar.gz
+        fi
+        curl -sSL $GET | sudo tar -xz -C /usr/local/bin
     else
         echo "Unsupported OS: $OS_ID"
         exit 1
@@ -211,6 +268,7 @@ main() {
     setup_vscode_extensions
     setup_vscode_settings
     run_prebuild
+    bash mdns.sh || true
 
     echo "Setup completed successfully!"
 }

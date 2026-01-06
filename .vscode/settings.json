@@ -8,5 +8,6 @@
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
     ],
     "cmake.sourceDirectory": "/home/lunarz/mhseals_docker/src/auto_nav",
-    "remote.autoForwardPortsSource": "hybrid"
+    "remote.autoForwardPortsSource": "hybrid",
+    "ROS2.distro": "humble"
 }
