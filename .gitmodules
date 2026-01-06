@@ -14,15 +14,15 @@
 	path = src/boat_interfaces
 	url = https://github.com/mhseals/boat_interfaces
 	branch = master
-; [submodule "src/asv_wave_sim"]
-; 	path = src/asv_wave_sim
-; 	url = https://github.com/MHSeals/asv_wave_sim
 [submodule "src/mhseals_nav"]
 	path = src/mhseals_nav
 	url = https://github.com/MHSeals/mhseals_nav.git
 [submodule "src/direct_lidar_inertial_odometry"]
 	path = src/direct_lidar_inertial_odometry
 	url = https://github.com/vectr-ucla/direct_lidar_inertial_odometry.git
-[submodule "src/zed-ros2-wrapper"]
-	path = src/zed-ros2-wrapper
-	url = https://github.com/stereolabs/zed-ros2-wrapper.git
+; [submodule "src/asv_wave_sim"]
+; 	path = src/asv_wave_sim
+; 	url = https://github.com/MHSeals/asv_wave_sim
+; [submodule "src/zed-ros2-wrapper"]
+; 	path = src/zed-ros2-wrapper
+; 	url = https://github.com/stereolabs/zed-ros2-wrapper.git
