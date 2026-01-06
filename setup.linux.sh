@@ -252,6 +252,24 @@ setup_vscode_settings() {
     jq '.["remote.autoForwardPorts"] = false' $VSC_CONFIG > $VSC_CONFIG.tmp && mv $VSC_CONFIG.tmp $VSC_CONFIG
 }
 
+setup_headless_devcontainer() {
+    if type nvm &> /dev/null; then
+        echo "Installing NVM..."
+        export NVM_DIR="$HOME/.nvm"
+        mkdir -p "$NVM_DIR"
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    else
+        echo "NVM installation found."
+    fi
+    nvm install --lts
+    nvm use --lts
+    
+    echo "Installing devcontainers CLI..."
+    npm install -g @devcontainers/cli
+}
+
 run_prebuild() {
     echo "Running prebuild script..."
     bash .devcontainer/prebuild.sh || true
@@ -267,6 +285,7 @@ main() {
     setup_docker
     setup_vscode_extensions
     setup_vscode_settings
+    setup_headless_devcontainer
     run_prebuild
     bash mdns.sh || true
 
