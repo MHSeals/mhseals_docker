@@ -25,4 +25,6 @@ ros-humble-nmea-msgs
 ros-humble-image-transport-plugins
 ros-humble-cv-bridge
 ros-humble-image-transport 
+ros-humble-ros2cli
+ros-humble-ros2topic
 geographiclib-tools
