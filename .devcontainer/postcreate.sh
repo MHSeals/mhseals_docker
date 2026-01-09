@@ -26,4 +26,14 @@ for dir in /usr/local/zed/resources /usr/local/zed/settings; do
     [ -d "$dir" ] && sudo chmod -R 777 "$dir" || true
 done
 
+echo "[postcreate] Fixing venv permissions..."
+sudo chown -R $USER:$USER /workspace/venv
+
+echo "[postcreate] Fixing device permissions..."
+sudo chown -R $USER:$USER /dev
+sudo chown -R $USER:$USER /usr/local/zed || true
+sudo usermod -aG video $USER
+sudo chgrp video /dev/nvhost-gpu /tmp/argus_socket || true
+sudo chmod 660 /dev/nvhost-gpu /tmp/argus_socket || true
+
 echo "[postcreate] Done!"
