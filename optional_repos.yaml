@@ -1,0 +1,29 @@
+- name: zed-ros2-wrapper
+  path: src/zed-ros2-wrapper
+  url: https://github.com/stereolabs/zed-ros2-wrapper.git
+  branch: master
+
+- name: direct_lidar_inertial_odometry
+  path: src/direct_lidar_inertial_odometry
+  url: https://github.com/vectr-ucla/direct_lidar_inertial_odometry.git
+  branch: master
+
+- name: boat_interfaces
+  path: src/boat_interfaces
+  url: https://github.com/mhseals/boat_interfaces.git
+  branch: master
+
+- name: asv_wave_sim
+  path: src/asv_wave_sim
+  url: https://github.com/mhseals/asv_wave_sim.git
+  branch: master
+  
+- name: auto_nav
+  path: src/auto_nav
+  url: https://github.com/mhseals/mhseals_sim.git
+  branch: main
+
+- name: mhsboat_ctrl
+  path: src/mhsboat_ctrl
+  url: https://github.com/mhseals/mhsboat_ctrl.git
+  branch: main
