@@ -288,6 +288,7 @@ main() {
     setup_headless_devcontainer
     run_prebuild
     bash mdns.sh || true
+    bash clone_optional.sh || true
 
     echo "Setup completed successfully!"
 }
