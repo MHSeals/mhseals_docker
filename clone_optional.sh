@@ -46,9 +46,9 @@ for i in $(seq 0 $((count - 1))); do
         else
             echo "$path already exists, skipping."
         fi
-        if ! grep -qxF "$path" "$IGNORE_FILE" 2>/dev/null; then
-            echo "$path" >> "$IGNORE_FILE"
-            echo "Added $path to .gitignore"
+        if ! grep -qxF "${path}/" "$IGNORE_FILE" 2>/dev/null; then
+            echo "${path}/" >> "$IGNORE_FILE"
+            echo "Added ${path}/ to .gitignore"
         fi
     fi
 done
