@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 echo "[postcreate] Appending custom bashrc..."
 cat .devcontainer/dev.bashrc >> ~/.bashrc
