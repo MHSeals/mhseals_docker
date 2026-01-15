@@ -9,5 +9,6 @@
     ],
     "cmake.sourceDirectory": "/home/lunarz/mhseals_docker/src/auto_nav",
     "remote.autoForwardPortsSource": "hybrid",
-    "ROS2.distro": "humble"
+    "ROS2.distro": "humble",
+    "github.copilot.chat.codeGeneration.useInstructionFiles": true
 }
