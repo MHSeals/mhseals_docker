@@ -28,7 +28,7 @@
   url: https://github.com/mhseals/mhsboat_ctrl.git
   branch: main
 
-- name: rviz-plugin-zen-od
-  path: src/rviz-plugin-zen-od
-  url: https://github.com/mhseals/rviz-plugin-zen-od.git
+- name: rviz-plugin-zed-od
+  path: src/rviz-plugin-zed-od
+  url: https://github.com/mhseals/rviz-plugin-zed-od.git
   branch: main
