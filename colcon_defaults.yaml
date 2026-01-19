@@ -2,5 +2,6 @@ build:
   merge-install: true
   cmake-args:
     - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    - -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
     - -DBUILD_TESTING=ON
     - -DCMAKE_CXX_STANDARD=17

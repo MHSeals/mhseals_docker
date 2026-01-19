@@ -5,6 +5,6 @@
 [submodule "src/mhseals_nav"]
 	path = src/mhseals_nav
 	url = https://github.com/MHSeals/mhseals_nav.git
-[submodule "src/mhseals_control"]
-	path = src/mhseals_control
-	url = https://github.com/MHSeals/mhseals_control.git
+[submodule "src/crane_control"]
+	path = src/crane_control
+	url = https://github.com/1unarzDev/crane_control.git
