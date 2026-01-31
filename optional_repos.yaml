@@ -6,7 +6,7 @@
 - name: direct_lidar_inertial_odometry
   path: src/direct_lidar_inertial_odometry
   url: https://github.com/vectr-ucla/direct_lidar_inertial_odometry.git
-  branch: master
+  branch: feature/ros2
 
 - name: boat_interfaces
   path: src/boat_interfaces
