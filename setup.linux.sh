@@ -3,9 +3,9 @@ set -e
 
 sync_time() {
     echo "Syncing time..."
-    sudo timedatectl set-local-rtc 1 --adjust-system-clock
-    sudo timedatectl set-timezone "$(curl -s https://ipapi.co/timezone)"
-    sudo timedatectl set-ntp true
+    sudo timedatectl set-local-rtc 1 --adjust-system-clock || true
+    sudo timedatectl set-timezone "$(curl -s https://ipapi.co/timezone)" || true
+    sudo timedatectl set-ntp true || true
 }
 
 detect_os() {
