@@ -123,6 +123,8 @@ setup_gpu() {
             sudo dnf install -y nvidia-container-toolkit
         fi
     fi
+    # Fix zed permissions
+    sudo sh -c 'echo "SUBSYSTEM==\"usb\", ATTR{idVendor}==\"2b03\", MODE=\"0666\"" > /etc/udev/rules.d/99-zed.rules'
 }
 
 setup_os() {
@@ -218,6 +220,11 @@ setup_os() {
         echo "Unsupported OS: $OS_ID"
         exit 1
     fi
+
+    # Fix Cube Orange Permissions
+    echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2dae", MODE="0666"' | sudo tee /etc/udev/rules.d/99-cubepilot.rules > /dev/null
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 }
 
 setup_docker() {
