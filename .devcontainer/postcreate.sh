@@ -20,9 +20,4 @@ echo "[postcreate] Installing workspace dependencies..."
 rosdep install --from-paths src --ignore-src -y \
   --skip-keys="$(tr '\n' ' ' < .devcontainer/package-ignore.txt)"
 
-echo "[postcreate] Fixing permissions of optional ZED SDK..."
-for dir in /usr/local/zed/resources /usr/local/zed/settings; do
-    [ -d "$dir" ] && sudo chmod -R 777 "$dir" || true
-done
-
 echo "[postcreate] Done!"
