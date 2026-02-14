@@ -20,4 +20,9 @@ echo "[postcreate] Installing workspace dependencies..."
 rosdep install --from-paths src --ignore-src -y \
   --skip-keys="$(tr '\n' ' ' < .devcontainer/package-ignore.txt)"
 
+echo "[postcreate] GPU permissions..."
+sudo chown -R $USER:$USER /dev 2> /dev/null
+sudo chgrp video /dev/nvhost-gpu /tmp/argus_socket || true
+sudo chmod 660 /dev/nvhost-gpu /tmp/argus_socket || true
+
 echo "[postcreate] Done!"
