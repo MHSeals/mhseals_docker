@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 sync_time() {
-    echo "Syncing time..."
+    echo "Syncing time to resolve Docker sync conflicts..."
+
     sudo timedatectl set-local-rtc 1 --adjust-system-clock || true
-    sudo timedatectl set-timezone "$(curl -s https://ipapi.co/timezone)" || true
+    TZ=$(curl -s https://ipapi.co/timezone || true)
+    if [[ -n "$TZ" ]]; then
+        sudo timedatectl set-timezone "$TZ"
+    fi
     sudo timedatectl set-ntp true || true
 }
 
@@ -12,8 +16,8 @@ detect_os() {
     if [[ -f /etc/os-release ]]; then
         . /etc/os-release
         OS_ID="$ID"
-        OS_LIKE="$ID_LIKE"
-        OS_VERSION_CODENAME="$VERSION_CODENAME"
+        OS_LIKE="${ID_LIKE:-}"
+        OS_VERSION_CODENAME="${VERSION_CODENAME:-}"
         echo "Detected OS: $OS_ID ($OS_LIKE), version codename: $OS_VERSION_CODENAME"
     else
         echo "Cannot detect OS. Exiting."
@@ -24,6 +28,10 @@ detect_os() {
 }
 
 detect_gpus() {
+    if ! command -v lspci &> /dev/null; then
+        echo "lspci not found, skipping GPU detection"
+        return
+    fi
     GPU_INFO=$(lspci -nn | grep -i 'vga\|3d\|display' || true)
     echo "Detected GPUs:"
     echo "$GPU_INFO"
@@ -134,10 +142,10 @@ setup_os() {
         echo "Arch-based distro detected."
 
         # Install/update yay
-        CONFLICTS=$(sudo pacman -Qq | grep '^yay-bin')
+        CONFLICTS=$(sudo pacman -Qq 2>/dev/null | grep '^yay' || true)
         if [[ -n "$CONFLICTS" ]]; then
             echo "Removing conflicting packages: $CONFLICTS"
-            sudo pacman -Rns --noconfirm $CONFLICTS
+            sudo pacman -Rns --noconfirm $CONFLICTS > /dev/null
         fi
         echo "Installing/updating AUR helper (yay)..."
         sudo pacman -S --needed --noconfirm base-devel git
@@ -150,7 +158,7 @@ setup_os() {
 
         # Remove conflicting packages
         for pkg in docker.io docker-doc podman-docker containerd runc; do
-            yay -Rns --noconfirm $pkg || true
+            yay -Rns --noconfirm $pkg || true  > /dev/null
         done
 
         yay -S --noconfirm docker docker-buildx xorg-xwayland visual-studio-code-bin python-hjson jq
@@ -159,7 +167,7 @@ setup_os() {
 
         # Remove conflicting packages
         for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
-            sudo apt-get remove -y $pkg || true
+            sudo apt-get remove -y $pkg || true > /dev/null
         done
 
         # Docker repo setup
@@ -191,7 +199,7 @@ setup_os() {
         echo "RPM-based distro detected."
 
         sudo dnf install -y dnf-plugins-core curl wget jq git
-        sudo dnf remove -y podman podman-docker containerd runc || true
+        sudo dnf remove -y podman podman-docker containerd runc || true > /dev/null
 
         sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo || \
         sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -260,7 +268,7 @@ setup_vscode_settings() {
 }
 
 setup_headless_devcontainer() {
-    if type nvm &> /dev/null; then
+    if ! type nvm &> /dev/null; then
         echo "Installing NVM..."
         export NVM_DIR="$HOME/.nvm"
         mkdir -p "$NVM_DIR"
