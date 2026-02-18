@@ -20,3 +20,4 @@ ros2 launch mhseals_nav robot.launch.py
 
 --- ZED Camera Optimization ---
 sudo -E ZED_Diagnostic -aio
+
