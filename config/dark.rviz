@@ -8,6 +8,7 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /Map1
+        - /Detection3DArray1
       Splitter Ratio: 0.5833333134651184
     Tree Height: 587
   - Class: rviz_common/Selection
@@ -63,79 +64,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_left_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_left_thruster_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_right_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_right_thruster_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        gps_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        imu_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_hull_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        lidar_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_left_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_left_thruster_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_right_propeller_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_right_thruster_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hull_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -149,83 +77,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_link:
-          Value: true
-        base_link_frd:
-          Value: true
-        camera_link:
-          Value: true
-        front_left_propeller_link:
-          Value: true
-        front_left_thruster_link:
-          Value: true
-        front_right_propeller_link:
-          Value: true
-        front_right_thruster_link:
-          Value: true
-        gps_link:
-          Value: true
-        imu_link:
-          Value: true
-        left_hull_link:
-          Value: true
-        lidar_link:
-          Value: true
-        map:
-          Value: true
-        map_ned:
-          Value: true
-        odom:
-          Value: true
-        odom_ned:
-          Value: true
-        rear_left_propeller_link:
-          Value: true
-        rear_left_thruster_link:
-          Value: true
-        rear_right_propeller_link:
-          Value: true
-        rear_right_thruster_link:
-          Value: true
-        right_hull_link:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        map:
-          map_ned:
-            {}
-          odom:
-            base_link:
-              base_link_frd:
-                {}
-              camera_link:
-                {}
-              gps_link:
-                {}
-              imu_link:
-                {}
-              left_hull_link:
-                front_left_thruster_link:
-                  front_left_propeller_link:
-                    {}
-                rear_left_thruster_link:
-                  rear_left_propeller_link:
-                    {}
-              lidar_link:
-                {}
-              right_hull_link:
-                front_right_thruster_link:
-                  front_right_propeller_link:
-                    {}
-                rear_right_thruster_link:
-                  rear_right_propeller_link:
-                    {}
-            odom_ned:
-              {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -579,6 +437,24 @@ Visualization Manager:
         Value: /waypoints
       Value: true
     - Alpha: 1
+      Class: vision_msgs_rviz_plugins/Detection3DArray
+      ConfigPath: ""
+      Enabled: true
+      Lifetime: 0
+      Line Width: 0.05000000074505806
+      Name: Detection3DArray
+      Namespaces:
+        bounding_box: true
+      Only Edge: false
+      Show Score: false
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: detections
+      Value: true
+    - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 4.726006984710693
@@ -650,16 +526,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 133.9296417236328
+      Distance: 31.881736755371094
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -8.793998718261719
-        Y: -5.686305522918701
-        Z: -11.49046802520752
+        X: 1.2619593143463135
+        Y: 6.193802833557129
+        Z: -2.4282419681549072
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
