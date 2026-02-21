@@ -7,7 +7,7 @@
         "/opt/ros/humble/lib/python3.10/site-packages",
         "/opt/ros/humble/local/lib/python3.10/dist-packages"
     ],
-    "cmake.sourceDirectory": "/home/lunarz/mhseals_docker/src/auto_nav",
+    "cmake.sourceDirectory": "/home/lunarz/mhseals_docker/src/direct_lidar_inertial_odometry",
     "remote.autoForwardPortsSource": "hybrid",
     "ROS2.distro": "humble",
     "github.copilot.chat.codeGeneration.useInstructionFiles": true
