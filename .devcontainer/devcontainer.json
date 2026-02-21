@@ -2,7 +2,7 @@
   "name": "Roboboat Development Container",
   "dockerComposeFile": [
     "docker-compose.yml",
-    "docker-compose.override.yml"
+    "docker-compose.override.linux.yml"
   ],
   "features": {
     "./features/gazebo": {
@@ -17,8 +17,8 @@
   },
   "service": "dev",
   "runServices": [
-    "dev"
-    // "sitl"
+    "dev",
+    "sitl"
   ],
   "workspaceFolder": "/home/roboboat/roboboat_ws",
   "postCreateCommand": ".devcontainer/postcreate.sh",
