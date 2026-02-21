@@ -2,7 +2,7 @@
   "name": "Roboboat Development Container",
   "dockerComposeFile": [
     "docker-compose.yml",
-    "docker-compose.override.linux.yml"
+    "docker-compose.override.yml"
   ],
   "features": {
     "./features/gazebo": {
