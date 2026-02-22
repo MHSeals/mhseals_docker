@@ -1,7 +1,6 @@
 services:
   dev:
     image: lunarzdev/mhseals-dev:linux
-    pull_policy: missing
     build:
       context: .
       dockerfile: Dockerfile.dev
