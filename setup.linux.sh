@@ -222,6 +222,7 @@ stage_devices() {
     local rules_file
     rules_file="$(mktemp)"
     printf '%s\n' \
+        'SUBSYSTEM=="tty", ATTRS{idVendor}=="2e8a", GROUP="dialout", MODE="0666", TAG+="uaccess"' \
         'SUBSYSTEM=="tty", ATTRS{idVendor}=="2dae", GROUP="dialout", MODE="0666", TAG+="uaccess"' \
         'SUBSYSTEM=="usb", ATTR{idVendor}=="2b03", GROUP="video", MODE="0666", TAG+="uaccess"' \
         'SUBSYSTEM=="video4linux", GROUP="video", MODE="0666", TAG+="uaccess"' \
