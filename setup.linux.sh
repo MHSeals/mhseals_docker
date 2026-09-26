@@ -229,6 +229,13 @@ stage_devices() {
         > "$rules_file"
     run sudo install -m 0644 "$rules_file" /etc/udev/rules.d/99-astro-robotics.rules
     rm -f "$rules_file"
+    if [[ -r .devcontainer/99-z-astro-gpu.rules ]] && [[ -r /proc/device-tree/compatible ]] \
+        && grep -aqi tegra /proc/device-tree/compatible; then
+        run sudo install -m 0644 .devcontainer/99-z-astro-gpu.rules /etc/udev/rules.d/99-z-astro-gpu.rules
+    fi
+    if [[ -r .devcontainer/99-z-astro-zed.rules ]]; then
+        run sudo install -m 0644 .devcontainer/99-z-astro-zed.rules /etc/udev/rules.d/99-z-astro-zed.rules
+    fi
     for group in dialout video render; do
         getent group "$group" >/dev/null 2>&1 && run sudo usermod -aG "$group" "$USER"
     done

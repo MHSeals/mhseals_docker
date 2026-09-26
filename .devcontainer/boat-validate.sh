@@ -80,9 +80,22 @@ docker run -d --name "$container" \
 step "Checking identity, ROS, CUDA, and ZED installations"
 inside 'test "$(id -un)" = roboboat && test "$(id -gn)" = roboboat && sudo -n true'
 inside 'source /opt/ros/jazzy/setup.bash && ros2 doctor --report'
+inside 'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix topic_tools'
+inside 'source /opt/astro-setup.bash && ros2 pkg prefix velodyne_driver'
+inside 'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix vision_msgs'
 inside 'test -d /usr/local/zed && test -f /opt/zed_ros2/setup.bash'
 inside 'test -x /usr/local/zed/tools/ZED_Diagnostic'
 inside 'test -e /dev/nvhost-ctrl || test -e /dev/nvidia0'
+inside 'python3 - <<"PY"
+import ctypes
+
+cuda = ctypes.CDLL("libcuda.so.1")
+device_count = ctypes.c_int()
+if cuda.cuInit(0) != 0 or cuda.cuDeviceGetCount(ctypes.byref(device_count)) != 0:
+    raise SystemExit("CUDA initialization failed")
+if device_count.value < 1:
+    raise SystemExit("CUDA reported no devices")
+PY'
 
 step "Checking Cube Orange and camera device access"
 inside 'compgen -G "/dev/serial/by-id/*Cube*" >/dev/null || compgen -G "/dev/ttyACM*" >/dev/null'

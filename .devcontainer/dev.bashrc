@@ -1,6 +1,15 @@
 if [[ -f /opt/ros/jazzy/setup.bash ]]; then
   source /opt/ros/jazzy/setup.bash
 fi
+if [[ -f /opt/topic_tools/setup.bash ]]; then
+  source /opt/topic_tools/setup.bash
+fi
+if [[ -f /opt/velodyne/setup.bash ]]; then
+  source /opt/velodyne/setup.bash
+fi
+if [[ -f /opt/vision_msgs/setup.bash ]]; then
+  source /opt/vision_msgs/setup.bash
+fi
 
 # Jazzy replaces ROS_LOCALHOST_ONLY with an explicit discovery range. Unset
 # the legacy variable as well so shells in containers created before this

@@ -118,6 +118,8 @@ After the camera, Cube Orange, NVIDIA runtime, ROS, and user checks pass, promot
 
 Promotion rotates `jetson-old`, `jetson-prev`, and `jetson`; failed hardware validation changes none of them. To publish a different moving tag without rotating that history, put it between `--promote` and the candidate digest. The compatibility logic for Jazzy on JetPack is pinned to the selected ZED wrapper commit in `Dockerfile.deps`; the repository does not maintain an expanding rosdep skip list.
 
+JetPack 6 uses Ubuntu 22.04, while official Jazzy deb packages target Ubuntu 24.04. The Jetson image therefore builds Jazzy and `topic_tools` from the pinned source manifest; do not add the Noble ROS apt repository to the Jammy image. Non-root CUDA also requires the Tegra device rule installed by the `devices` setup component. Re-run `./setup.linux.sh --components devices` after upgrading JetPack if GPU device permissions have been replaced.
+
 The weekly Docker Hub retention workflow compacts candidates older than 30 days while retaining no more than five distinct candidates and keeps the complete repository at no more than 28 fixed tags. It also uploads a pre-operation tag/digest inventory for recovery and auditing. `DOCKERHUB_TOKEN` therefore needs Read, Write, and Delete permission. To remove the existing commit-tag history, manually dispatch **Docker Hub retention** once in `audit` mode, review its inventory artifact, and then dispatch it in `migrate` mode. Routine workflows use supported manifest operations; the one-time migration isolates Docker Hub's currently undocumented delete-by-tag endpoint behind a disposable probe and an exact legacy-tag allowlist.
 
 Maintainers can inspect the policy without credentials or mutations:
