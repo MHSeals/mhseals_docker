@@ -35,4 +35,8 @@ if [[ "$mode" == cuda || "$mode" == jetson ]]; then
         'source /opt/astro-setup.bash && ros2 pkg prefix velodyne_driver >/dev/null'
     check "source-built vision_msgs" bash -lc \
         'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix vision_msgs >/dev/null'
+    check "source-built MAVROS" bash -lc \
+        'source /opt/astro-setup.bash && ros2 pkg prefix mavros >/dev/null'
+    check "source-built MAVROS Extras" bash -lc \
+        'source /opt/astro-setup.bash && ros2 pkg prefix mavros_extras >/dev/null'
 fi

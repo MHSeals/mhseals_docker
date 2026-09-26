@@ -52,6 +52,18 @@ if "ARG VELODYNE_REF=0f2a3bb1dde4fa91cbafad8a3f9f89b66c2a1350" not in dockerfile
     print("dependency lock check: pinned Velodyne overlay is missing", file=sys.stderr)
     sys.exit(1)
 
+if "ARG MAVROS_REF=a5979a5299775d9dd9ce1d57f9cfa1542c5259b9" not in dockerfile:
+    print("dependency lock check: pinned MAVROS overlay is missing", file=sys.stderr)
+    sys.exit(1)
+
+if "ARG MAVLINK_REF=4e38deb39224ca8a37b5188afcfe2c241fab1ff6" not in dockerfile:
+    print("dependency lock check: pinned MAVLink overlay is missing", file=sys.stderr)
+    sys.exit(1)
+
+if "ARG EIGEN_STL_CONTAINERS_REF=1f6e7fb78982b168875c5a17cda203d79824ef50" not in dockerfile:
+    print("dependency lock check: pinned eigen_stl_containers overlay is missing", file=sys.stderr)
+    sys.exit(1)
+
 if "COPY ros2-jazzy.lock.repos /tmp/ros2.repos" not in dockerfile:
     print("dependency lock check: Dockerfile.deps does not consume the lock", file=sys.stderr)
     sys.exit(1)
