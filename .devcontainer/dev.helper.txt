@@ -29,7 +29,8 @@ PERSISTENT HARDWARE SETTINGS (pins, MOSFET, channel map, mixer, timeouts)
     export MHSEALS_HARDWARE_CONFIG="$ROS_WS/config/hardware.yaml"
   Create/copy the YAML before exporting the path; missing explicit files fail.
   boat_test --identify-thrusters pulses outputs and saves the resulting map.
-  boat_test --mosfet-line 28 --save-config persists a CLI pin override.
+  boat_test --mosfet-chip gpio3 --mosfet-line 28 --save-config persists a pin override.
+  ros2 run mhseals_hardware mosfet_test checks enable only; disconnect propulsion power first.
   Both boat_test and thruster_test accept --config /absolute/hardware.yaml.
   thruster_pwm_node accepts --ros-args -p config_file:=/absolute/hardware.yaml.
   Stop controllers before changing pins. No Pico is used.
