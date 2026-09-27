@@ -78,6 +78,13 @@ Anything else you would like to install manually, reference the installation scr
 
 The capability tags are `core`, `cuda`, `jetson-jp5-foxy`, `jetson-jp6-jazzy`, and `sitl`. Do not use the old ambiguous `jetson` tag for new deployments. `deps` is an internal JetPack 6 ARM64 dependency layer, not a runtime image. The host probe selects the matching JetPack generation and preserves the host's name in the generated Compose adapter. All development services are privileged, and native Linux adapters bind `/dev` for robotics hardware access. See [Jetson deployment and packages](docs/jetson-images.md).
 
+Boat commands are listed by `help`: on the ODROID,
+`ros2 run mhseals_hardware thruster_pwm_node` subscribes to `/cmd_vel`, and
+`ros2 run mhseals_hardware keyboard_control` publishes manual effort. These arm
+real thrusters; secure the boat first. Nav2 velocity targets need a calibrated
+controller, not a direct PWM remap. See [object tracking/legacy bridge and
+optional lidar](https://github.com/MHSeals/mhseals_nav/blob/main/docs/objects.md).
+
 Compose uses the `missing` pull policy by default. This pulls a published image on a clean host while allowing VS Code to start its locally generated `vsc-*-uid` image. To refresh a published image explicitly, run `docker compose pull` before reopening the devcontainer; setting `ASTRO_PULL_POLICY=always` during Dev Containers startup is not supported because Compose would try to pull VS Code's local UID image from Docker Hub.
 
 Image maintainers can opt into a local **core** build without changing the normal Compose file (this override is not a Jetson GPU build):

@@ -52,7 +52,9 @@ Foxy and Jazzy must use separate DDS domains: **142 for legacy Foxy, 42 for
 Jazzy**. On Squirtle/ODROID, joining the same domain caused Foxy discovery
 deserialization errors and `std::bad_alloc` crashes even though local camera
 validation passed. Do not connect them by merely matching domain IDs. A
-deliberate cross-version bridge is required; none is configured by deployment.
+deliberate cross-version bridge is required. The optional
+[object bridge](https://github.com/MHSeals/mhseals_nav/blob/main/docs/objects.md)
+transfers detections and camera static TF; deployment does not start it automatically.
 `ASTRO_ROS_DOMAIN_ID` overrides the deployment/Compose default for networks
 where all peers are compatible. ZED 4/5 custom interfaces also differ.
 

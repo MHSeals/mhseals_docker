@@ -2,6 +2,7 @@ geographiclib-tools
 python3-scipy
 python3-rich
 python3-libgpiod
+python3-websocket
 ros-jazzy-cv-bridge
 ros-jazzy-rosbridge-server
 ros-jazzy-gz-ros2-control

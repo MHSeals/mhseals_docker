@@ -12,11 +12,14 @@ BUILD
 
 REAL THRUSTERS — ODROID ONLY; clear/submerge propellers, secure boat first
   ros2 run mhseals_hardware thruster_pwm_node   # cmd_vel -> native PWM/GPIO
+    Custom effort topic: append --ros-args -r cmd_vel:=/control/cmd_vel
   ros2 run mhseals_hardware keyboard_control   # keyboard -> cmd_vel
   ros2 run mhseals_hardware thruster_test      # direct physical-output PWM TUI
   ros2 run mhseals_hardware boat_test          # guided tests + sensor bags
   ros2 run mhseals_hardware remote_controller  # RCIn -> cmd_vel
   Run ONLY ONE command publisher; do not mix navigation/RC/keyboard control.
+  PWM input is normalized effort. Nav2 /nav/cmd_vel is m/s and rad/s;
+  a calibrated velocity controller is required between Nav2 and this driver.
   Keyboard: WASD/arrows move, +/- speed, Space neutral, X exit.
   Release-aware terminals stop on key-up. Ordinary SSH uses repeat timeouts:
   initial 0.65 s grace, then 0.15 s. Space stops without waiting for timeout.
@@ -44,18 +47,29 @@ MHSEALS_NAV (JAZZY WORKSPACE)
   JetPack 6 sensor host (no MAVROS):
     ros2 launch mhseals_nav sensors.launch.py sim:=false
   sensors_ignore accepts camera,lidar; it skips drivers, not localization
-  consumers. Missing topics can still stall navigation. It does not disable
+  consumers. To navigate deliberately without lidar, also use use_lidar:=false
+  (no range-obstacle avoidance). Default true stops on stale /points. It does not disable
   thrusters and is not a substitute for sim:=true.
   Inspect options: ros2 launch mhseals_nav robot.launch.py --show-args
   Minimal telemetry: ros2 launch mhseals_nav boat_test.launch.py
 
+OBJECTS (JAZZY; run one tracker only)
+  CRANE: ros2 launch mhseals_nav objects.launch.py use_sim_time:=true
+  Native ZED (camera host): ros2 launch mhseals_nav objects.launch.py source:=zed
+  If sensors.launch.py already converts ZED, omit source:=zed.
+  Legacy: ros2 launch mhseals_nav objects.launch.py source:=bridge rosbridge_url:=ws://squirtle-jetson.local:9090 camera_root_frame:=front_camera_link
+  Requires camera_name:=front + rosbridge on Foxy and camera mount TF on Jazzy.
+  RViz/Foxglove: fixed frame map, MarkerArray /tracked_objects; data /objects/map.
+  Markers are NOT costmap obstacles. Legacy ZED4 cannot load the buoy ONNX model.
+  Setup/limitations: src/mhseals_nav/docs/objects.md
+
 CAMERA / DISTRIBUTED ROS
-  Both Jetsons: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i
+  Both Jetsons: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i camera_name:=front publish_tf:=false publish_map_tf:=false
   Check data, not just topic presence: ros2 topic hz <image-topic>
   Legacy ZED 4 and current ZED 5 have different topic/custom-message layouts.
   Jazzy uses ROS_DOMAIN_ID=42; legacy Foxy uses 142. Keep them separate:
   direct Foxy/Jazzy DDS discovery crashed legacy nodes in boat testing.
-  Use an explicit cross-version bridge, not merely matching domain IDs.
+  Use the object bridge above, not merely matching domain IDs.
   Foxglove (all images): ros2 launch rosbridge_server rosbridge_websocket_launch.xml
     Choose Rosbridge; connect to ws://<host>:9090 (Squirtle: squirtle-jetson.local).
   Keep this unauthenticated bridge on the trusted boat LAN.
