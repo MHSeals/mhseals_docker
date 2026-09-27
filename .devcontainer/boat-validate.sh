@@ -91,41 +91,8 @@ inside 'source /opt/astro-setup.bash && ros2 pkg prefix velodyne_driver'
 inside 'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix vision_msgs'
 inside 'test -d /usr/local/zed && test -f /opt/zed_ros2/setup.bash'
 inside 'test -x /usr/local/zed/tools/ZED_Diagnostic'
-inside 'test -e /dev/nvhost-ctrl || test -e /dev/nvidia0'
-inside 'python3 - <<"PY"
-import ctypes
-
-cuda = ctypes.CDLL("libcuda.so.1")
-device_count = ctypes.c_int()
-if cuda.cuInit(0) != 0 or cuda.cuDeviceGetCount(ctypes.byref(device_count)) != 0:
-    raise SystemExit("CUDA initialization failed")
-if device_count.value < 1:
-    raise SystemExit("CUDA reported no devices")
-PY'
-
-step "Checking Cube Orange and camera device access"
-inside 'compgen -G "/dev/serial/by-id/*Cube*" >/dev/null || compgen -G "/dev/ttyACM*" >/dev/null'
-inside 'compgen -G "/dev/video*" >/dev/null'
-inside 'for node in /dev/video*; do test -r "$node" && test -w "$node"; done'
-
-step "Checking live ZED ROS image data"
-inside '
-  source /opt/ros/jazzy/setup.bash
-  source /opt/zed_ros2/setup.bash
-  ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i >/tmp/zed-launch.log 2>&1 &
-  launch_pid=$!
-  trap "kill $launch_pid 2>/dev/null || true" EXIT
-  for _ in $(seq 1 30); do
-    ros2 topic list | grep -q "/zed/zed_node/left/image_rect_color" && break
-    sleep 1
-  done
-  timeout 20 ros2 topic hz /zed/zed_node/left/image_rect_color >/tmp/zed-rate.log 2>&1 || test $? -eq 124
-  grep -q "average rate" /tmp/zed-rate.log || {
-    cat /tmp/zed-launch.log
-    cat /tmp/zed-rate.log
-    exit 1
-  }
-'
+step "Checking non-root CUDA and live camera data through the shared validator"
+"$script_dir/validate-jetson-runtime.sh" "$container"
 
 step "Candidate passed boat hardware validation"
 

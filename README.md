@@ -80,7 +80,7 @@ The capability tags are `core`, `cuda`, `jetson-jp5-foxy`, `jetson-jp6-jazzy`, a
 
 Compose uses the `missing` pull policy by default. This pulls a published image on a clean host while allowing VS Code to start its locally generated `vsc-*-uid` image. To refresh a published image explicitly, run `docker compose pull` before reopening the devcontainer; setting `ASTRO_PULL_POLICY=always` during Dev Containers startup is not supported because Compose would try to pull VS Code's local UID image from Docker Hub.
 
-Image maintainers can opt into a local build without changing the normal Compose file:
+Image maintainers can opt into a local **core** build without changing the normal Compose file (this override is not a Jetson GPU build):
 
 ```bash
 docker compose \
@@ -104,13 +104,13 @@ If a persistent native ARM64 build server becomes available, label its GitHub ru
 
 Runtime images use bounded release histories: the clean capability tag is current, `-prev` is the previous validated image, and `-old` is the third generation. Fixed `-next` and architecture tags are staging references and are never selected by the devcontainer. This keeps normal rollback available without publishing permanent tags for every commit. After the one-time migration, any empty rollback slots fill naturally during the next two successful builds rather than treating an old, unverified commit image as validated.
 
-Jetson builds place candidates in five internal retention slots, but the immutable digest in the Actions summary is the authoritative identifier. A slot can be reused after five newer candidates, while a digest being tested with `--promote` is protected by `jetson-check`. The boat does not need to be registered as a GitHub runner. Validate a candidate directly:
+JetPack 6 builds place candidates in five family-specific retention slots; the immutable digest in the Actions summary is authoritative. A slot can be reused after five newer candidates, while `--promote` protects a digest with `jetson-jp6-jazzy-check`. The boat does not need to be a GitHub runner. On JetPack 6, validate a candidate directly:
 
 ```bash
 .devcontainer/boat-validate.sh lunarzdev/astro@sha256:<digest-from-actions>
 ```
 
-After the camera, Cube Orange, NVIDIA runtime, ROS, and user checks pass, promote that exact candidate using the Docker credentials already configured on the boat:
+After camera, NVIDIA runtime, ROS, and user checks pass, promote that exact candidate using Docker credentials on the boat (the Cube/MAVROS belongs on ODROID, not Jetson):
 
 ```bash
 .devcontainer/boat-validate.sh --promote lunarzdev/astro@sha256:<digest-from-actions>
