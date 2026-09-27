@@ -9,6 +9,7 @@ on:
       - '.devcontainer/jetson-user.sh'
       - '.devcontainer/configure-zed-access.sh'
       - '.devcontainer/dev.helper.txt'
+      - '.devcontainer/rosapi-foxy-sequences.patch'
       - '.github/workflows/jetson-jp5.yml'
   workflow_dispatch:
 permissions:
