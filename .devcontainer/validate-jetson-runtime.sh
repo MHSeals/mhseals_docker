@@ -19,7 +19,7 @@ docker exec "$container" bash -c '
     set -e
     source /opt/ros/${ROS_DISTRO}/setup.bash
     source /opt/zed_ros2/setup.bash
-    ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i >/tmp/astro-zed-launch.log 2>&1 &
+    ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i camera_name:=astro_validation >/tmp/astro-zed-launch.log 2>&1 &
     launch_pid=$!
     trap "kill -INT $launch_pid 2>/dev/null || true; wait $launch_pid || true" EXIT
     python3 /tmp/astro-camera-probe.py || { cat /tmp/astro-zed-launch.log; exit 1; }

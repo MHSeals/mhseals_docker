@@ -39,6 +39,9 @@ if [[ "$mode" == jetson ]]; then
     check "source-built vision_msgs" bash -lc \
         'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix vision_msgs >/dev/null'
 else
+    check "ROS run and bag commands" bash -lc \
+        'source /opt/ros/jazzy/setup.bash && ros2 run --help >/dev/null && ros2 bag --help >/dev/null'
+    check "hardware TUI Python dependencies" /usr/bin/python3 -c 'import rich, gpiod, yaml'
     check "MAVROS and Extras" bash -lc \
         'source /opt/ros/jazzy/setup.bash && ros2 pkg prefix mavros && ros2 pkg prefix mavros_extras'
     check "MAVROS geoid dataset" test -r /usr/share/GeographicLib/geoids/egm96-5.pgm

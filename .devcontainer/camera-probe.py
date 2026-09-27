@@ -9,19 +9,25 @@ from sensor_msgs.msg import Image
 rclpy.init()
 node = rclpy.create_node('astro_camera_probe')
 received = []
+stamps = set()
 subscriptions = {}
 deadline = time.monotonic() + 90
 
 
 def receive(message):
-    if message.width > 0 and message.height > 0 and len(message.data) > 0:
+    stamp = (message.header.stamp.sec, message.header.stamp.nanosec)
+    if (stamp not in stamps and message.width > 0 and message.height > 0
+            and len(message.data) > 0):
+        stamps.add(stamp)
         received.append((message.width, message.height, message.encoding))
 
 
 try:
     while time.monotonic() < deadline and len(received) < 3:
         for topic, types in node.get_topic_names_and_types():
-            if 'sensor_msgs/msg/Image' in types and topic not in subscriptions:
+            if (not subscriptions and topic.startswith('/astro_validation/')
+                    and ('/rgb/' in topic or '/left/' in topic)
+                    and 'sensor_msgs/msg/Image' in types):
                 subscriptions[topic] = node.create_subscription(
                     Image, topic, receive, qos_profile_sensor_data)
                 print('Subscribing:', topic, flush=True)
