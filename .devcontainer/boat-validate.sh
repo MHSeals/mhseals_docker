@@ -6,7 +6,7 @@ usage() {
 Usage: boat-validate.sh [--promote [TAG]] REPOSITORY@sha256:DIGEST
 
 Pull and validate an immutable Jetson candidate digest on the boat. With
---promote, rotate the repository's jetson/jetson-prev/jetson-old release ring.
+--promote, rotate the repository's jetson-jp6-jazzy release ring.
 An explicit TAG bypasses the release ring. Docker credentials must already be
 available to Docker for promotion.
 EOF
@@ -33,6 +33,7 @@ image="${1:-}"
 
 container="astro_boat_validate_$$"
 repository="${image%@*}"
+family=jetson-jp6-jazzy
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 lease_active=false
 promoted=false
@@ -40,10 +41,10 @@ promoted=false
 cleanup() {
     docker rm -f "$container" >/dev/null 2>&1 || true
     if $lease_active && ! $promoted; then
-        if docker buildx imagetools inspect "${repository}:jetson" >/dev/null 2>&1; then
+        if docker buildx imagetools inspect "${repository}:${family}" >/dev/null 2>&1; then
             echo "[boat] Releasing candidate lease back to the stable Jetson image"
-            docker buildx imagetools create --tag "${repository}:jetson-check" \
-                "${repository}:jetson" >/dev/null || true
+            docker buildx imagetools create --tag "${repository}:${family}-check" \
+                "${repository}:${family}" >/dev/null || true
         else
             echo "[boat] No stable Jetson tag exists; retaining jetson-check as the candidate lease"
         fi
@@ -63,7 +64,7 @@ docker pull "$image"
 
 if $promote; then
     step "Protecting the candidate digest during hardware validation"
-    docker buildx imagetools create --tag "${repository}:jetson-check" "$image" >/dev/null
+    docker buildx imagetools create --tag "${repository}:${family}-check" "$image" >/dev/null
     lease_active=true
 fi
 
@@ -130,12 +131,12 @@ step "Candidate passed boat hardware validation"
 
 if $promote; then
     if [[ -z "$promote_tag" ]]; then
-        promote_tag="${repository}:jetson"
+        promote_tag="${repository}:${family}"
     fi
-    if [[ "$promote_tag" == "${repository}:jetson" ]]; then
+    if [[ "$promote_tag" == "${repository}:${family}" ]]; then
         step "Rotating validated Jetson release history"
         "$script_dir/registry-retention.py" --repository "$repository" \
-            rotate jetson "$image"
+            rotate "$family" "$image"
     else
         step "Promoting $image to $promote_tag without rotating the Jetson ring"
         docker buildx imagetools create --tag "$promote_tag" "$image"
