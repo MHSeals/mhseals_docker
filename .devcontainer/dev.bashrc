@@ -1,5 +1,5 @@
-if [[ -f /opt/ros/jazzy/setup.bash ]]; then
-  source /opt/ros/jazzy/setup.bash
+if [[ -f /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash ]]; then
+  source /opt/ros/${ROS_DISTRO:-jazzy}/setup.bash
 fi
 if [[ -f /opt/topic_tools/setup.bash ]]; then
   source /opt/topic_tools/setup.bash

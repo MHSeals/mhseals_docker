@@ -1,7 +1,7 @@
 # Legacy Xavier/Nano-family JetPack 5 host ONLY. Never use on JetPack 6.
 ARG BASE_IMAGE=stereolabs/zed:4.0-devel-l4t-r35.4@sha256:9c70d89b87260726c679de3d830cde810ccfcb23d929c9dbed846204142f7db5
 FROM ${BASE_IMAGE}
-ARG ZED_WRAPPER_REF=6e5865a4c8adce96882871b357bddd85cb2700f3
+ARG ZED_WRAPPER_REF=77a043a6d7fb5802ac49562e61efc1a4d6b5fc3f
 ENV DEBIAN_FRONTEND=noninteractive ROS_DISTRO=foxy \
     ROS_WS=/home/roboboat/roboboat_ws SHELL=/bin/bash \
     LANG=C.UTF-8 ROS_DOMAIN_ID=42
