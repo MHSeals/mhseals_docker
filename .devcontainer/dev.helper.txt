@@ -55,6 +55,12 @@ CAMERA / DISTRIBUTED ROS
   Jazzy uses ROS_DOMAIN_ID=42; legacy Foxy uses 142. Keep them separate:
   direct Foxy/Jazzy DDS discovery crashed legacy nodes in boat testing.
   Use an explicit cross-version bridge, not merely matching domain IDs.
+  JPEG preview without shared DDS (see docs/camera-preview.md):
+    Jetson: astro-camera-preview serve --bind <boat-LAN-IP>
+    Browser: http://<boat-LAN-IP>:8088
+    Jazzy laptop: astro-camera-preview receive http://<boat-LAN-IP>:8088
+  The ZED camera launch must also be running. Preview is lossy, 5 Hz by default,
+  no CameraInfo/TF/depth; use it for debugging, not navigation inputs.
   Diagnostics: .devcontainer/device-diagnostics.sh; sudo -E ZED_Diagnostic -aio
 
 PACKAGES
