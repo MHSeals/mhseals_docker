@@ -40,3 +40,7 @@ jobs:
         run: |
           docker run --rm lunarzdev/astro:jetson-jp5-foxy-next bash -ic \
             'test "$(id -un)" = roboboat && sudo -n true && ros2 pkg prefix zed_wrapper && astro-ros-install --help'
+      - name: Exercise shared package installer on Foxy
+        run: |
+          docker run --rm --user root lunarzdev/astro:jetson-jp5-foxy-next \
+            astro-ros-install --source examples_rclcpp_minimal_publisher
