@@ -55,6 +55,10 @@ step() { printf '\n[boat] %s\n' "$*"; }
 inside() { docker exec "$container" bash -lc "$1"; }
 
 step "Pulling immutable candidate $image"
+grep -q '^# R36 ' /etc/nv_tegra_release || {
+    echo 'This validation path requires JetPack 6 / L4T R36.' >&2
+    exit 1
+}
 docker pull "$image"
 
 if $promote; then
@@ -71,6 +75,7 @@ architecture="$(docker image inspect --format '{{.Architecture}}' "$image")"
 
 step "Starting privileged hardware validation container"
 docker run -d --name "$container" \
+    --hostname "$(uname -n)" \
     --privileged --network host --ipc host --pid host \
     --runtime nvidia --shm-size 2g \
     -v /dev:/dev \

@@ -48,7 +48,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/astro
 
-RUN set -eu; if [ -d /usr/local/zed ]; then \
+RUN set -e; if [ -d /usr/local/zed ]; then \
       git clone --branch "${ZED_WRAPPER_REF}" --depth 1 --recursive \
         https://github.com/stereolabs/zed-ros2-wrapper.git /tmp/zed_ws/src/zed-ros2-wrapper; \
       . /opt/ros/${ROS_DISTRO}/setup.sh; \

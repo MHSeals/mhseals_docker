@@ -92,7 +92,7 @@ docker compose \
 
 Workspace dependency installation is intentionally excluded from normal container creation. After package manifests change, run `ASTRO_ROSDEP_INSTALL=1 .devcontainer/postcreate.sh` once inside the container.
 
-To diagnose a camera, Raspberry Pi Pico, or Cube Orange connection, run `.devcontainer/device-diagnostics.sh`. Scoped host udev rules keep MicroPython, CubePilot, ZED USB, and video devices accessible across reconnects, while passwordless sudo remains available inside the privileged container for targeted recovery. Do not recursively change ownership or permissions beneath `/dev`.
+To diagnose a camera or Cube Orange connection, run `.devcontainer/device-diagnostics.sh`. Scoped host udev rules keep CubePilot, ZED USB, and video devices accessible across reconnects, while passwordless sudo remains available inside the privileged container for targeted recovery. Thrusters now use native ODROID PWM/GPIO, not Pico/MicroPython. See `src/mhseals_hardware/docs/configuration.md` for shared YAML settings and manual controls. Do not recursively change ownership or permissions beneath `/dev`.
 
 ### Image automation
 

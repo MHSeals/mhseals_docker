@@ -157,6 +157,8 @@ jobs:
             .devcontainer/Dockerfile.deps \
             .devcontainer/ros2-jazzy.lock.repos \
             .devcontainer/normalize-python-permissions.sh \
+            .devcontainer/astro-ros-install.sh \
+            .devcontainer/jetson-jp6-packages.txt \
             | sha256sum | cut -d' ' -f1)"
           echo "key=$key" >> "$GITHUB_OUTPUT"
       - name: Check the dependency content key
@@ -228,7 +230,7 @@ jobs:
           platforms: linux/arm64
           network: host
           push: true
-          tags: ${{ env.REGISTRY_IMAGE }}:jetson-next
+          tags: ${{ env.REGISTRY_IMAGE }}:jetson-jp6-jazzy-next
           build-args: BASE_IMAGE=${{ env.REGISTRY_IMAGE }}:deps
           labels: |
             org.opencontainers.image.revision=${{ github.sha }}
@@ -242,7 +244,7 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           output="$(.devcontainer/registry-retention.py --repository "$REGISTRY_IMAGE" \
-            candidate "${REGISTRY_IMAGE}@${CANDIDATE_DIGEST}")"
+            candidate --family jetson-jp6-jazzy "${REGISTRY_IMAGE}@${CANDIDATE_DIGEST}")"
           echo "$output"
           slot="$(grep '^slot=' <<<"$output" | tail -1 | cut -d= -f2-)"
           digest="$(grep '^digest=' <<<"$output" | tail -1 | cut -d= -f2-)"

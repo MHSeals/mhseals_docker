@@ -10,8 +10,8 @@ fi
 if [[ -f /opt/vision_msgs/setup.bash ]]; then
   source /opt/vision_msgs/setup.bash
 fi
-if [[ -f /opt/mavros/setup.bash ]]; then
-  source /opt/mavros/setup.bash
+if [[ -f /opt/astro-extra/setup.bash ]]; then
+  source /opt/astro-extra/setup.bash
 fi
 
 # Jazzy replaces ROS_LOCALHOST_ONLY with an explicit discovery range. Unset

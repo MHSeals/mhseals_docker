@@ -86,3 +86,9 @@ RUN printf '%s\n' \
       > /opt/astro-setup.bash
 
 CMD ["bash"]
+
+COPY astro-ros-install.sh /usr/local/bin/astro-ros-install
+COPY jetson-jp6-packages.txt /tmp/jetson-packages.txt
+RUN chmod +x /usr/local/bin/astro-ros-install \
+    && sed '/^[[:space:]]*#/d; /^[[:space:]]*$/d' /tmp/jetson-packages.txt \
+       | xargs -r /usr/local/bin/astro-ros-install
