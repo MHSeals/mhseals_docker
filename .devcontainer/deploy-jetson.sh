@@ -31,6 +31,7 @@ for group in video render; do
     [[ -z "$gid" ]] || groups+=(--group-add "$gid")
 done
 docker run -d --name roboboat_dev --hostname "$(uname -n)" \
+    --add-host "$(uname -n):127.0.1.1" --add-host roboboat:127.0.1.1 \
     --restart unless-stopped --runtime nvidia --privileged \
     --network host --ipc host --shm-size 2g --user roboboat "${groups[@]}" \
     -e ROS_DOMAIN_ID="${ASTRO_ROS_DOMAIN_ID:-${ROS_DOMAIN_ID:-$default_domain}}" \

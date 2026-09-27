@@ -50,7 +50,8 @@ host_name="${host_name%%.*}"
 # Inject into the generated adapter only. Keep the base roboboat alias for
 # existing callers; Docker adds the actual hostname to /etc/hosts itself.
 sed -i.bak "/^  dev:$/a\\
-    hostname: ${host_name}
+    hostname: ${host_name}\\
+    extra_hosts: [\"${host_name}:127.0.1.1\"]
 " "${script_dir}/docker-compose.override.yml"
 if command -v getent >/dev/null; then
     device_gids=()
