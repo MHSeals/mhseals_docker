@@ -5,9 +5,6 @@ ARG ROS_DISTRO=jazzy
 ARG ROS_POLICY_REF=86171bccda22de6e83ccc69b3c0e67af99dece7c
 ARG ZED_WRAPPER_REF=86171bccda22de6e83ccc69b3c0e67af99dece7c
 ARG VELODYNE_REF=0f2a3bb1dde4fa91cbafad8a3f9f89b66c2a1350
-ARG MAVROS_REF=a5979a5299775d9dd9ce1d57f9cfa1542c5259b9
-ARG MAVLINK_REF=4e38deb39224ca8a37b5188afcfe2c241fab1ff6
-ARG EIGEN_STL_CONTAINERS_REF=1f6e7fb78982b168875c5a17cda203d79824ef50
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Etc/UTC \
     ROS_DISTRO=${ROS_DISTRO} \
@@ -71,34 +68,6 @@ RUN apt-get update \
         --packages-up-to velodyne_driver velodyne_pointcloud \
     && rm -rf /tmp/velodyne_ws /var/lib/apt/lists/*
 
-# Official Jazzy binaries target Noble, but JetPack 6 requires Jammy. Build
-# MAVROS and MAVROS Extras from exact source revisions instead of mixing Ubuntu
-# releases. The ZED dependency overlay supplies the remaining ROS packages.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        geographiclib-tools libasio-dev libconsole-bridge-dev libeigen3-dev \
-        libgeographic-dev libyaml-cpp-dev python3-click python3-empy \
-    && git clone --filter=blob:none --no-checkout \
-        https://github.com/mavlink/mavros.git /tmp/mavros_ws/src/mavros \
-    && git -C /tmp/mavros_ws/src/mavros checkout "${MAVROS_REF}" \
-    && git clone --filter=blob:none --no-checkout \
-        https://github.com/ros2-gbp/mavlink-gbp-release.git /tmp/mavros_ws/src/mavlink \
-    && git -C /tmp/mavros_ws/src/mavlink checkout "${MAVLINK_REF}" \
-    && git clone --filter=blob:none --no-checkout \
-        https://github.com/ros/eigen_stl_containers.git \
-        /tmp/mavros_ws/src/eigen_stl_containers \
-    && git -C /tmp/mavros_ws/src/eigen_stl_containers checkout \
-        "${EIGEN_STL_CONTAINERS_REF}" \
-    && source /opt/ros/${ROS_DISTRO}/setup.bash \
-    && source /root/ros2_ws/install/setup.bash \
-    && cd /tmp/mavros_ws \
-    && CMAKE_BUILD_PARALLEL_LEVEL=1 colcon build \
-        --merge-install --install-base /opt/mavros \
-        --packages-up-to mavros mavros_extras --executor sequential \
-        --parallel-workers 1 --cmake-args -DBUILD_TESTING=OFF \
-    && /opt/mavros/lib/mavros/install_geographiclib_datasets.sh \
-    && rm -rf /tmp/mavros_ws /var/lib/apt/lists/*
-
 COPY normalize-python-permissions.sh /usr/local/sbin/normalize-python-permissions
 
 RUN test -f "/opt/ros/${ROS_DISTRO}/setup.bash" \
@@ -114,7 +83,6 @@ RUN printf '%s\n' \
       'source /opt/ros/jazzy/setup.bash' \
       'source /opt/zed_ros2/setup.bash' \
       'source /opt/velodyne/setup.bash' \
-      'source /opt/mavros/setup.bash' \
       > /opt/astro-setup.bash
 
 CMD ["bash"]

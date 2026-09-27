@@ -7,6 +7,7 @@ ros-jazzy-image-transport-plugins
 ros-jazzy-joint-state-publisher
 ros-jazzy-joint-state-publisher-gui
 ros-jazzy-mavros
+ros-jazzy-mavros-extras
 ros-jazzy-nav2-bringup
 ros-jazzy-nav2-core
 ros-jazzy-nmea-msgs

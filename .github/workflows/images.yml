@@ -61,6 +61,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=core-${{ matrix.arch }}
       - name: Smoke-test core architecture
         run: |
+          docker run --rm "${REGISTRY_IMAGE}:core-${{ matrix.arch }}" astro-smoke core
           docker run --rm \
             "${REGISTRY_IMAGE}:core-${{ matrix.arch }}" \
             bash -lc 'test "$(id -un)" = roboboat && test "$(id -gn)" = roboboat && source /opt/ros/jazzy/setup.bash && ros2 pkg prefix ros_gz_bridge && /usr/bin/python3 -c "import importlib.metadata; tuple(importlib.metadata.distributions())" && sudo -n true'
