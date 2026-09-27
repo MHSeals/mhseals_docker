@@ -55,11 +55,9 @@ CAMERA / DISTRIBUTED ROS
   Jazzy uses ROS_DOMAIN_ID=42; legacy Foxy uses 142. Keep them separate:
   direct Foxy/Jazzy DDS discovery crashed legacy nodes in boat testing.
   Use an explicit cross-version bridge, not merely matching domain IDs.
-  Foxglove on legacy JP5: ros2 launch rosbridge_server rosbridge_websocket_launch.xml
-    Connect using Rosbridge: ws://squirtle-jetson.local:9090
-  Foxglove on Jazzy: ros2 launch foxglove_bridge foxglove_bridge_launch.xml
-    Connect using Foxglove WebSocket: ws://<host>:8765
-  Keep these unauthenticated bridges on the trusted boat LAN.
+  Foxglove (all images): ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+    Choose Rosbridge; connect to ws://<host>:9090 (Squirtle: squirtle-jetson.local).
+  Keep this unauthenticated bridge on the trusted boat LAN.
   Diagnostics: .devcontainer/device-diagnostics.sh; sudo -E ZED_Diagnostic -aio
 
 PACKAGES
