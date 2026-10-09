@@ -1,207 +1,101 @@
-## Introduction
+# astro_dock
 
-Welcome to the MHSeals ROS 2 Jazzy development environment. The same Compose project runs on native Linux, NVIDIA Jetson, Raspberry Pi, immutable Fedora-family hosts, Windows, and macOS. Normal startup pulls prebuilt images from `lunarzdev/astro` instead of rebuilding ROS, Gazebo, CUDA, ZED, or ArduPilot locally.
+### Overview
 
-## Installation
+This repository provides a project-agnostic ROS container workspace and host tooling for robotics development, with sensor drivers and integration for the Unity simulator in [`crane_sim`](https://github.com/1unarzDev/crane_sim). Startup uses prebuilt images from [`lunarzdev/astro`](https://hub.docker.com/r/lunarzdev/astro); application code lives in the mounted workspace and can be rebuilt independently.
 
-Clone the repo with submodules:
+The main stack uses ROS 2 Jazzy. JetPack 5 hosts use a separate Foxy image for camera compatibility. Linux, NVIDIA Jetson, Raspberry Pi, Windows, and macOS have Compose adapters; robotics hardware runs on native Linux, while desktop hosts also support development and simulation connections.
+
+### Architecture
+
+The `dev` service runs as `roboboat` in `/home/roboboat/roboboat_ws`, with the repository mounted as its workspace. Development containers are privileged; native Linux adapters expose `/dev` for hardware access.
+
+| Component | Responsibility |
+| --- | --- |
+| [`.devcontainer/`](.devcontainer/) | Runtime images, Compose adapters, shell setup, deployment, and validation |
+| [`ROS-TCP-Endpoint`](https://github.com/MHSeals/ROS-TCP-Endpoint) | ROS connection to the Unity simulator; included as a submodule |
+| [`crane_sim`](https://github.com/1unarzDev/crane_sim) | Unity physics and simulated sensors; runs separately |
+| `sitl` service | Optional ArduPilot simulated flight controller; AMD64 image |
+
+Runtime images separate the host capabilities:
+
+| Image tag | Platform / stack | Purpose |
+| --- | --- | --- |
+| `core` | AMD64 / ARM64, Ubuntu 24.04, Jazzy | General ROS development and MAVROS |
+| `cuda` | AMD64, Ubuntu 24.04, Jazzy, CUDA / ZED | NVIDIA desktop development and cameras |
+| `jetson-jp6-jazzy` | ARM64, JetPack 6 / L4T R36, Ubuntu 22.04, Jazzy, ZED 5.4 | Orin camera / GPU host |
+| `jetson-jp5-foxy` | ARM64, JetPack 5 / L4T R35, Ubuntu 20.04, Foxy, ZED 4.0 | Xavier NX camera / GPU host |
+| `sitl` | AMD64, ArduPilot | Simulated FCU |
+
+Jetson images contain camera drivers; MAVROS is provided by `core` for a separate control host. JetPack 6 builds Jazzy from pinned sources because Jazzy's official Ubuntu packages target 24.04. Keep ROS apt repositories matched to the image's Ubuntu release. JetPack 4 / L4T R32 is unsupported, and Foxy is end-of-life.
+
+#### Layers and host overrides
+
+Images supply the platform dependencies; the mounted workspace supplies your application. `core` and `cuda` share [`Dockerfile.dev`](.devcontainer/Dockerfile.dev), using ROS and ZED/CUDA base images respectively. JetPack 6 separates the expensive ROS and sensor builds in [`Dockerfile.deps`](.devcontainer/Dockerfile.deps) from the user, Python environment, and runtime tooling in [`Dockerfile.jetson`](.devcontainer/Dockerfile.jetson). ROS and the ZED wrapper occupy separate cache layers, so wrapper changes can reuse the ROS build. JetPack 5 has its own compatible Dockerfile.
+
+[`docker-compose.yml`](.devcontainer/docker-compose.yml) defines the shared services. `prebuild.sh` copies a host adapter to the ignored `docker-compose.override.yml`, which Dev Containers merges after the base file. Adapters add display sockets, devices, NVIDIA runtime settings, or immutable-host mounts as needed; The probe preserves the host hostname and maps device group IDs; Jetson detection also selects the JetPack image and DDS domain. Rerunning the probe regenerates this file, so keep persistent changes in an adapter or an additional override.
+
+Extend the environment at the layer that owns the change: add application packages under `src/`, reusable dependencies to [`apt-packages.txt`](.devcontainer/apt-packages.txt), [`requirements.txt`](.devcontainer/requirements.txt), or the Jetson package lists, and host mounts or services to a Compose override. Add another `-f` file after the base and host adapter for project-specific settings; later files override earlier values according to Compose's merge rules. For Dev Containers, include that file in `devcontainer.json`'s `dockerComposeFile` list. `ASTRO_IMAGE` selects a custom runtime image without changing the adapter.
+
+### Setup
+
+Clone the workspace, including its ROS TCP submodule:
 
 ```bash
-git clone --recurse-submodules https://github.com/mhseals/mhseals_docker.git
+git clone --recurse-submodules https://github.com/1unarzDev/astro_dock.git
+cd astro_dock
+# For an existing checkout:
+git submodule update --init --recursive
 ```
 
-If you didn't include the recurse-submodules flag, then run the following command to pull each needed submodule:
-
-```
-git submodule foreach '
-  default_branch=$(git remote show origin | sed -n "/HEAD branch/s/.*: //p")
-  echo "Pulling latest changes from $default_branch in $name"
-  git fetch origin "$default_branch"
-  git checkout "$default_branch"
-  git pull origin "$default_branch"
-'
-```
-
-For your convenience, an environment setup script for each OS has been provided. On Linux, inspect the proposed host changes before approving them:
+On Linux, preview the host setup before applying it:
 
 ```bash
 ./setup.linux.sh --dry-run
 ./setup.linux.sh
 ```
 
-The Linux setup detects Debian/Ubuntu, Arch, Fedora, RHEL 8–10 derivatives, rpm-ostree/bootc hosts, and Ubuntu Core. It previews every command and asks before Docker, NVIDIA toolkit, udev, developer-tool, and Compose stages. Use `--components docker,devices,compose` to limit its scope or `--non-interactive --yes` for provisioning. It never installs an NVIDIA driver or recursively changes `/dev`.
+The script configures host time synchronization, Docker, NVIDIA container support, scoped device rules, development tools, and the Compose adapter. It asks before each stage and supports Debian/Ubuntu, Arch, Fedora, RHEL derivatives, immutable Fedora hosts, and Ubuntu Core. Use `--components clock,docker,devices,compose` to select stages, or `--non-interactive --yes` for provisioning. An NVIDIA driver must already be installed when needed.
 
-On macOS or Windows, run `./setup.mac.sh` or `setup.windows.bat` as before.
+On Windows or macOS, use `setup.windows.bat` or `./setup.mac.sh` and keep Docker Desktop running. Container GUI applications additionally need [VcXsrv](https://sourceforge.net/projects/vcxsrv/) on Windows or [XQuartz](https://www.xquartz.org/) on macOS, with network connections enabled. Graphics and hardware access depend on the host; use native Linux for robotics hardware.
 
-Alternatively, you may manually install the following necessary dependencies as you see fit:
-- Docker
-- NVIDIA Container Toolkit
-- Docker Compose
-- Node.js LTS and the Dev Container CLI (recommended)
-- VS Code with the Dev Containers extension (optional)
-- Unity + Vulkan (if you're running the sim, and depending on the available graphics driver)
+For manual setup, install [Docker Engine](https://docs.docker.com/engine/install/) with Compose, Node.js LTS, and the [Dev Container CLI](https://github.com/devcontainers/cli). NVIDIA hosts also need the NVIDIA Container Toolkit. VS Code with the Dev Containers extension is optional.
 
-For manual installation, reference the OS-specific guides below.
-
-### Linux
-
-For manual Docker installation instructions, visit the [Docker Engine installation guide](https://docs.docker.com/engine/install/) and complete the [Linux post-install steps](https://docs.docker.com/engine/install/linux-postinstall/).
-
-The recommended interface is the editor-independent [Dev Container CLI](https://github.com/devcontainers/cli). Install Node.js LTS through your preferred Node version manager or distribution package, then install the CLI:
+Install Node.js LTS if needed; the setup scripts do not install it. Then run from the repository root on Linux, macOS, or WSL:
 
 ```bash
-node --version
 npm install --global @devcontainers/cli
-devcontainer --version
-```
-
-With Docker running, select the host adapter and start the environment from the repository root:
-
-```bash
 .devcontainer/prebuild.sh
 devcontainer up --workspace-folder .
 devcontainer exec --workspace-folder . bash
 ```
 
-This workflow works with any host editor. VS Code is optional; opening the repository with its Dev Containers extension invokes the same configuration. To stop and remove the Compose services:
+On native Windows, the setup script generates the Windows adapter; install the CLI with the same `npm` command and run the `devcontainer` commands from that checkout. VS Code's **Reopen in Container** uses the same configuration after the adapter is generated.
+
+### Usage
+
+Add your project's ROS packages under `src/` inside the container. [`optional_repos.yaml`](optional_repos.yaml) lists additional repositories available through `./clone_optional.sh`; choose the ones your project needs. Build from the workspace root:
 
 ```bash
-docker compose \
-  -f .devcontainer/docker-compose.yml \
-  -f .devcontainer/docker-compose.override.yml \
-  down
+colcon build --symlink-install
+source install/setup.bash
+help
 ```
 
-Anything else you would like to install manually, reference the installation scripts for help on figuring out how to install them.
+Camera images already include the ZED wrapper. Only clone it when developing the driver, and match the revision pinned in the corresponding Dockerfile. On JetPack 5, use `humble-v4.0.8` with its recursive submodules; the optional clone helper defaults to `master`, which is incompatible with that image.
 
-### Container images and local builds
+#### Simulation
 
-The capability tags are `core`, `cuda`, `jetson-jp5-foxy`, `jetson-jp6-jazzy`, and `sitl`. Do not use the old ambiguous `jetson` tag for new deployments. `deps` is an internal JetPack 6 ARM64 dependency layer, not a runtime image. The host probe selects the matching JetPack generation and preserves the host's name in the generated Compose adapter. All development services are privileged, and native Linux adapters bind `/dev` for robotics hardware access. See [Jetson deployment and packages](docs/jetson-images.md).
-
-Boat commands are listed by `help`: on the ODROID,
-`ros2 run mhseals_hardware thruster_pwm_node` subscribes to `/cmd_vel`, and
-`ros2 run mhseals_hardware keyboard_control` publishes manual effort. These arm
-real thrusters; secure the boat first. Nav2 velocity targets need a calibrated
-controller, not a direct PWM remap. See [object tracking/legacy bridge and
-optional lidar](https://github.com/MHSeals/mhseals_nav/blob/main/docs/objects.md).
-
-Compose uses the `missing` pull policy by default. This pulls a published image on a clean host while allowing VS Code to start its locally generated `vsc-*-uid` image. To refresh a published image explicitly, run `docker compose pull` before reopening the devcontainer; setting `ASTRO_PULL_POLICY=always` during Dev Containers startup is not supported because Compose would try to pull VS Code's local UID image from Docker Hub.
-
-Image maintainers can opt into a local **core** build without changing the normal Compose file (this override is not a Jetson GPU build):
+Run [`crane_sim`](https://github.com/1unarzDev/crane_sim) on the host. Start the ROS TCP endpoint inside the container:
 
 ```bash
-docker compose \
-  -f .devcontainer/docker-compose.yml \
-  -f .devcontainer/docker-compose.override.yml \
-  -f .devcontainer/docker-compose.build.yml \
-  build
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args \
+  -p ROS_IP:=0.0.0.0 -p ROS_TCP_PORT:=10000
 ```
 
-Workspace dependency installation is intentionally excluded from normal container creation. After package manifests change, run `ASTRO_ROSDEP_INSTALL=1 .devcontainer/postcreate.sh` once inside the container.
+The endpoint listens on all container interfaces at port `10000`. In the simulator's ROS connection settings, use the development host's reachable address and the same port. Launch your project's ROS nodes separately, enabling `use_sim_time` for nodes that consume the simulator's `/clock`. A project launch file may already start the endpoint; start each component once.
 
-To diagnose a camera or Cube Orange connection, run `.devcontainer/device-diagnostics.sh`. Scoped host udev rules keep CubePilot, ZED USB, and video devices accessible across reconnects, while passwordless sudo remains available inside the privileged container for targeted recovery. Thrusters now use native ODROID PWM/GPIO, not Pico/MicroPython. See `src/mhseals_hardware/docs/configuration.md` for shared YAML settings and manual controls. Do not recursively change ownership or permissions beneath `/dev`.
-
-### Image automation
-
-GitHub Actions requires the `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` repository secrets. `core` uses native hosted amd64 and arm64 runners; `cuda` and `sitl` use hosted amd64. JetPack 6 dependencies are built in `deps` on native ARM64, then packaged as `jetson-jp6-jazzy`. The independent native ARM64 legacy workflow builds `jetson-jp5-foxy`; both reuse the same user setup, package installer, help, deployment, and runtime validation tools. No QEMU compilation is used.
-
-The `deps` image records a content key derived from `Dockerfile.deps`, the locked ROS manifest, and the Python permission policy. CI reads that key from the fixed `deps` tag and skips the dependency build when it already matches. Within a cold build, ROS and the ZED wrapper are separate cache layers, so a wrapper-only update or late image-policy change does not rebuild ROS. Expect the first build for a genuinely new ROS lock or base image to remain expensive; routine repository changes should not pay that cost.
-
-If a persistent native ARM64 build server becomes available, label its GitHub runner `self-hosted`, `linux`, `ARM64`, and `arm64-builder`, then manually dispatch the image workflow with `arm64_builder` set to `self-hosted`. The normal automatic path continues to use GitHub's hosted ARM64 runner.
-
-Runtime images use bounded release histories: the clean capability tag is current, `-prev` is the previous validated image, and `-old` is the third generation. Fixed `-next` and architecture tags are staging references and are never selected by the devcontainer. This keeps normal rollback available without publishing permanent tags for every commit. After the one-time migration, any empty rollback slots fill naturally during the next two successful builds rather than treating an old, unverified commit image as validated.
-
-JetPack 6 builds place candidates in five family-specific retention slots; the immutable digest in the Actions summary is authoritative. A slot can be reused after five newer candidates, while `--promote` protects a digest with `jetson-jp6-jazzy-check`. The boat does not need to be a GitHub runner. On JetPack 6, validate a candidate directly:
-
-```bash
-.devcontainer/boat-validate.sh lunarzdev/astro@sha256:<digest-from-actions>
-```
-
-After camera, NVIDIA runtime, ROS, and user checks pass, promote that exact candidate using Docker credentials on the boat (the Cube/MAVROS belongs on ODROID, not Jetson):
-
-```bash
-.devcontainer/boat-validate.sh --promote lunarzdev/astro@sha256:<digest-from-actions>
-```
-
-Promotion rotates `jetson-jp6-jazzy-old`, `jetson-jp6-jazzy-prev`, and `jetson-jp6-jazzy`; failed hardware validation changes none of them. The JetPack 5 family is independent. The compatibility logic for Jazzy on JetPack is pinned to the selected ZED wrapper commit in `Dockerfile.deps`; the repository does not maintain an expanding rosdep skip list.
-
-JetPack 6 uses Ubuntu 22.04, while official Jazzy debs target Ubuntu 24.04. Its image builds Jazzy, `topic_tools`, and sensor overlays from pinned sources; do not add the Noble ROS apt repository to Jammy. MAVROS and MAVROS Extras belong to `core` (including ARM64 ODROID), not either Jetson image. Non-root CUDA may require the Tegra device rules installed by the `devices` setup component. Re-run `./setup.linux.sh --components devices` after upgrading JetPack if permissions have changed.
-
-The weekly Docker Hub retention workflow compacts candidates older than 30 days while retaining no more than five distinct candidates and keeps the complete repository at no more than 28 fixed tags. It also uploads a pre-operation tag/digest inventory for recovery and auditing. `DOCKERHUB_TOKEN` therefore needs Read, Write, and Delete permission. To remove the existing commit-tag history, manually dispatch **Docker Hub retention** once in `audit` mode, review its inventory artifact, and then dispatch it in `migrate` mode. Routine workflows use supported manifest operations; the one-time migration isolates Docker Hub's currently undocumented delete-by-tag endpoint behind a disposable probe and an exact legacy-tag allowlist.
-
-Maintainers can inspect the policy without credentials or mutations:
-
-```bash
-.devcontainer/registry-retention.py --repository lunarzdev/astro audit
-```
-
-The source-built ROS foundation is also locked in `ros2-jazzy.lock.repos`. This is necessary because the ROS `jazzy` manifest contains branch names rather than mutually tested commits; resolving those branches during every image build can combine incompatible repository revisions. To prepare a dependency update, regenerate the lock and run its check:
-
-```bash
-.devcontainer/lock-repos.py \
-  https://raw.githubusercontent.com/ros2/ros2/jazzy/ros2.repos \
-  .devcontainer/ros2-jazzy.lock.repos
-.devcontainer/check-dependency-lock.py
-```
-
-The check intentionally requires review of the `rcutils` compatibility pin. Update that assertion only after the corresponding `rmw` and `rcutils` revisions compile together.
-
-### Windows
-
-For manual installation, get the following programs:
-
-- [VcXsrv (X server for display)](https://sourceforge.net/projects/vcxsrv/)
-- [Git](https://git-scm.com/downloads)
-- [VSCode](https://code.visualstudio.com/)
-- [Docker Desktop](https://docs.docker.com/desktop/release-notes/)
-
-**Start the Docker Daemon each time you want to work on the project by opening the Docker Desktop application.** The first time you install it, you will be prompted to restart your system.
-
-### Mac
-
-> [!IMPORTANT]
-> If you are willing to troubleshoot installing a newer version of OpenGL on an X11 Server (XQuartz), follow the steps below and document what you do as much as possible. Otherwise, simply install Linux on your Mac and follow the Linux instructions as normal.
-
-Identify your chip architecture (Intel or Apple Silicon) by running `uname -m`. If your system is an Intel-based Mac, it should output `x86_64`, and if it is Apple Silicon, it will show `arm64`.
-
-Install the following programs through your preferred method:
-
-- [XQuartz (X server for display)](https://www.xquartz.org/)
-- [Git](https://git-scm.com/downloads)
-- [VSCode](https://code.visualstudio.com/)
-- [Docker Desktop](https://docs.docker.com/desktop/release-notes/)
-
-Brew provides an easy way to install all of them at once. Start by installing Brew:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Now, install all of the needed packages:
-
-```bash
-brew install git --cask visual-studio-code docker xquartz
-```
-
-You will need to restart your system to use both Docker and XQuartz. If, for some reason, you are running a Hackintosh or a macOS VM, it is likely that Docker will complain about Hyper-V for virtualization. Depending on your setup, you will need to add these options: `+vmx,+smep,+smap,+hypervisor` to your VM/boot configuration. You will likely have to troubleshoot issues, but feel free to ask questions here.
-
-After restarting, open XQuartz and enable `File > Preferences > Security > Allow connections from network clients`. **Each time you need to run a GUI application in the Docker container, be sure to run `xhost +` to give XQuartz access to X11 forwarding ports.** For more information, see [X11 Forwarding on macOS and Docker](https://gist.github.com/sorny/969fe55d85c9b0035b0109a31cbcb088). It may be beneficial to add a configuration to your system that runs this command automatically.
-
-## Usage
-
-### Simulation
-
-There are three primary components to the simulation stack:
-
-- Unity physics sim
-- Ardupilot SITL control
-- ROS navigation logic
-
-For the Unity physics sim, visit [this page](https://github.com/MHSeals/mhseals_asv_sim) and follow the instructions for the setup.
-
-The ROS packages/nodes you run for navigation are all completely up to you depending on what needs to be tested; however, be sure to always use the `ros_tcp_endpoint` package by running `ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p <arg>:=<value>` (`ROS_IP` and `ROS_TCP_PORT` are useful args for matching the connection with Unity).
-
-ArduPilot SITL is optional rather than part of every devcontainer startup. Start it with the Compose profile, then attach a terminal to `ardupilot_sitl`:
+If testing with ArduPilot SITL, start its Compose profile from a host terminal:
 
 ```bash
 docker compose \
@@ -211,18 +105,147 @@ docker compose \
 docker exec -it ardupilot_sitl bash
 ```
 
-After you have access to the terminal, run the following command (it will initially fail unless the Unity connection is already up):
+Inside `ardupilot_sitl`, with the Unity connection running:
 
 ```bash
 Tools/autotest/sim_vehicle.py -v "$VEHICLE" $SITL_EXTRA_ARGS
 ```
 
-and connect it to ROS by starting the MAVROS node
+Connect MAVROS from the development container using the TCP output configured by the SITL service:
 
+```bash
+ros2 launch mavros apm.launch fcu_url:=tcp://127.0.0.1:5762
 ```
-ros2 launch mavros apm.launch fcu_url:=tcp://127.0.0.1:5763
+
+If your project launch already starts MAVROS, configure that instance instead. The SITL image is AMD64; running it on ARM64 requires emulation.
+
+#### Hardware and cameras
+
+On physical hardware, launch your project's nodes on the hosts responsible for their devices. Disable simulation time and synchronize clocks across hosts so sensor timestamps and TF agree. Device configuration and actuator control belong to the project using the workspace.
+
+For a standalone camera session inside a Jetson container:
+
+```bash
+ros2 launch zed_wrapper zed_camera.launch.py \
+  camera_model:=zed2i camera_name:=front publish_tf:=false publish_map_tf:=false
+# In another container shell:
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ```
 
-All of these commands can also be found by running the `help` command in their respective containers.
+In Foxglove, choose **Rosbridge**, connect to `ws://<jetson-host>:9090`, and select an image topic. Inspect `ros2 topic list` because ZED 4 and 5 topic names differ. Keep the unauthenticated connection on a trusted LAN.
 
-To run the ROS navigation code, a launch file has been provided for your convenience. Run `ros2 launch mhseals_nav robot.launch.py` with the optional arguments `use_sime_time` (should equal false if running on the actual boat by using `use_sime_time:=false`), `ros_ip` for the Unity simulation IP address, and finally `ros_port` for the simulation port. There are other arguments available for configuring a Zed 2i camera among other things. More details can be found be looking in the `launch` folder.
+Foxy uses DDS domain **142**; Jazzy uses **42**. Keep them separate: matching their domain IDs can cause discovery failures and crashes. Use an explicit cross-version bridge for shared data. Jazzy RViz cannot directly view the Foxy camera stream; use Foxglove or a matching Foxy environment. `ASTRO_ROS_DOMAIN_ID` overrides the Jetson default for networks with compatible peers.
+
+For device access problems, run `.devcontainer/device-diagnostics.sh` on the host and inside the container to compare access. Reapply `./setup.linux.sh --components devices` after a JetPack upgrade if permissions change. Use scoped device rules rather than recursive permission changes under `/dev`.
+
+Containers share the host clock. For an isolated network with a reachable NTP server, configure it on each Linux host before running timestamp-sensitive nodes or package updates:
+
+```bash
+ASTRO_NTP_SERVER=192.168.0.185 ./setup.linux.sh --components clock
+timedatectl status
+```
+
+Replace the address with your network's time server. [`.devcontainer/Dockerfile.time-server`](.devcontainer/Dockerfile.time-server) and [`time-server.conf`](.devcontainer/time-server.conf) provide a chrony relay for an internet-connected Linux host; adjust the allowed subnet before using it. Offline hosts need an available time source or battery-backed RTC. Stop control nodes and actuators before clock steps.
+
+#### Router and internet sharing
+
+[`router_setup.sh`](router_setup.sh) configures a DD-WRT router over SSH for a LAN whose internet gateway is a connected laptop. By default, the router is `192.168.0.1`, the laptop is `192.168.0.2`, and DHCP clients use the laptop as their gateway. The script configures DHCP, DNS, and WPA2 Wi-Fi, disables router WAN/NAT, and connects devices through normal LAN ports. Addresses, SSID, and credentials are prompted during setup.
+
+```bash
+./router_setup.sh --dry-run
+./router_setup.sh
+```
+
+The preview connects and inspects without changing router settings. Applying requires confirmation, saves an NVRAM backup when supported, reboots, and verifies the configuration. SSH keys, trusted host keys, and backups live in the ignored `router_setup_state/` directory; the menu also provides backup restoration.
+
+On the Linux gateway laptop, [`shared_internet.sh`](shared_internet.sh) detects an internet-connected interface, adjusts its default route, enables IPv4 forwarding, and adds NAT/forwarding rules for `192.168.0.0/24`:
+
+```bash
+./shared_internet.sh
+```
+
+First give the laptop's LAN interface the gateway address advertised by DHCP and connect a separate internet uplink. Review the script before running it: the subnet is fixed, rules are appended on each run, and persistence expects `/etc/iptables/iptables.rules` and an `iptables` systemd service. Adapt these to the host distribution and subnet. Check internet access from a LAN client afterward.
+
+#### Remote work
+
+[`cx`](https://github.com/1unarzDev/cx) is a recommended companion for working remotely with `astro_dock` on a robot. It provides SSH device management, persistent terminal sessions, file browsing/transfers, and access through an enrolled gateway. It runs on Linux AMD64 and ARM64.
+
+After installing `cx` and preparing the execution host as described in its README, enroll the robot:
+
+```bash
+cx add user@robot-host
+# If the robot is reachable through an enrolled laptop:
+cx add user@robot-host --via laptop
+cx
+```
+
+Open a terminal or persistent shell on the robot host, change to its `astro_dock` checkout, and use `devcontainer exec --workspace-folder . bash` to enter the ROS workspace. Managed sessions keep running when the viewer disconnects. The router and sharing scripts provide network access; `cx` uses that access for remote work.
+
+#### Refresh and stop
+
+Compose pulls missing images while allowing Dev Containers to use its local UID-adjusted image. To refresh published images, run this from the host before reopening the container:
+
+```bash
+docker compose \
+  -f .devcontainer/docker-compose.yml \
+  -f .devcontainer/docker-compose.override.yml \
+  pull dev
+```
+
+Keep `ASTRO_PULL_POLICY=missing` during Dev Containers startup; `always` attempts to pull the locally generated UID image from the registry. To stop and remove the services, use the same Compose files with `down`.
+
+### Development
+
+Develop application packages inside the container. After adding packages or changing their manifests, install workspace dependencies explicitly, then build and test the affected packages. Replace `your_package` with your package name:
+
+```bash
+ASTRO_ROSDEP_INSTALL=1 .devcontainer/postcreate.sh
+colcon build --symlink-install --packages-select your_package
+source install/setup.bash
+colcon test --packages-select your_package
+colcon test-result --verbose
+```
+
+On either Jetson image, `sudo -E astro-ros-install <package>` installs a ROS package using distro packages where available and source builds otherwise. Source additions live in `/opt/astro-extra`; open a new shell afterward. To persist additions across recreation, add package names to [`jetson-jp5-packages.txt`](.devcontainer/jetson-jp5-packages.txt) or [`jetson-jp6-packages.txt`](.devcontainer/jetson-jp6-packages.txt) and rebuild the image.
+
+For a local `core` image build, add the build override from the host:
+
+```bash
+docker compose \
+  -f .devcontainer/docker-compose.yml \
+  -f .devcontainer/docker-compose.override.yml \
+  -f .devcontainer/docker-compose.build.yml \
+  build dev
+```
+
+This builds `core`; Jetson images use their platform-specific Dockerfiles. Source-built Jazzy dependencies are locked in [`ros2-jazzy.lock.repos`](.devcontainer/ros2-jazzy.lock.repos). Use `lock-repos.py` to regenerate the lock and `check-dependency-lock.py` to verify it, reviewing the `rcutils` compatibility pin when updating dependencies.
+
+#### Image publishing and deployment
+
+[The image workflow](.github/workflows/images.yml) builds `core` on native hosted AMD64 and ARM64 runners, smoke-tests both, and combines them into a multi-architecture tag. `cuda` and `sitl` use hosted AMD64 runners. JetPack 6 builds `deps` and the runtime candidate on hosted ARM64; its dependency content key skips an unchanged foundation, and registry caching preserves intermediate layers. `deps` is an internal build layer. [JetPack 5](.github/workflows/jetson-jp5.yml) builds independently on hosted ARM64. Image compilation uses native runners rather than QEMU.
+
+For a persistent ARM64 build server, register a GitHub runner with `self-hosted`, `linux`, `ARM64`, and `arm64-builder` labels, then dispatch the image workflow with `arm64_builder=self-hosted`. This switches the JetPack 6 jobs; normal automatic builds use hosted runners. Publishing requires `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets, with Read, Write, and Delete access for retention. [Pull-request checks](.github/workflows/container-checks.yml) validate adapters, scripts, dependency locks, and image policy, then build `core` without publishing.
+
+Runtime tags select the current validated image, with `-prev` and `-old` retaining two rollback generations. `-next` and candidate slots are staging references. JetPack 6 candidates require hardware validation before promotion; use the immutable digest from the Actions summary on a JetPack 6 host, replacing `DIGEST` below:
+
+```bash
+.devcontainer/boat-validate.sh lunarzdev/astro@sha256:DIGEST
+# After reviewing validation, promote that candidate with Docker credentials:
+.devcontainer/boat-validate.sh --promote lunarzdev/astro@sha256:DIGEST
+```
+
+Validation checks the container user, ROS, non-root CUDA, and live camera messages. Promotion repeats validation and rotates the JetPack 6 release tags only after it passes. Stop any existing camera publisher before validation.
+
+For standalone deployment on either Jetson generation, use the matching runtime image:
+
+```bash
+.devcontainer/deploy-jetson.sh lunarzdev/astro:jetson-jp6-jazzy "$PWD"
+.devcontainer/validate-jetson-runtime.sh roboboat_dev
+docker exec -it roboboat_dev bash
+```
+
+Use `jetson-jp5-foxy` on R35. The deploy script checks architecture and JetPack compatibility and refuses to replace an existing `roboboat_dev`. For offline deployment, transfer an ARM64 image with `docker save` / `docker load`; deployment reuses the loaded image.
+
+The [retention workflow](.github/workflows/registry-retention.yml) keeps bounded candidate slots and release history. Inspect registry state without mutations using `.devcontainer/registry-retention.py --repository lunarzdev/astro audit`.
+
+Keep changes scoped, explain their purpose and validation in the pull request, and update this README when setup, usage, or architecture changes. Run ROS probes in an isolated container/domain without attached actuators.
